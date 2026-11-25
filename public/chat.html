@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Chat</title>
+  <link rel="stylesheet" href="chat.css">
+  <link rel="stylesheet" href="call.css">
+</head>
+<body class="chat-page">
+  <div class="chat-container">
+    <div class="chat-header">
+        <button id="pageBack" class="chat-modal-back" aria-label="Back">←</button>
+        <h2 id="chatTitle">Chat</h2>
+      </div>
+    <div class="chat-body">
+      <div class="messages" id="messages">
+        <div class="message them">Hello — this is a demo chat. Start your conversation below.</div>
+      </div>
+    </div>
+    <div class="chat-footer">
+      <label class="chat-file-button" for="chatFileInput" title="Upload file" aria-label="Upload file">📎
+        <input id="chatFileInput" type="file" accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.heic" multiple hidden>
+      </label>
+      <input id="msgInput" class="chat-input" placeholder="Type a message...">
+      <button id="chatCallBtn" class="send-btn" type="button" data-call-mode="video" disabled>Call</button>
+      <button id="sendBtn" class="send-btn">Send</button>
+    </div>
+    <div id="chatSelectedFiles" class="chat-selected-files"></div>
+  </div>
+
+  <script src="api.js"></script>
+  <script src="appointment-access.js"></script>
+  <script src="call.js"></script>
+  <script>
+    function getParam(name) {
+      const url = new URL(location.href);
+      return url.searchParams.get(name);
+    }
+    const doctor = getParam('doctor') || 'Doctor';
+    let appointmentId = getParam('appointmentId') || '';
+    const openedFromNotification = ['1', 'true'].includes(String(getParam('notification')).toLowerCase());
+    document.getElementById('chatTitle').textContent = 'Chat with ' + decodeURIComponent(doctor.replace(/\+/g,' '));
+
+    const messages = document.getElementById('messages');
+    const input = document.getElementById('msgInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const callBtn = document.getElementById('chatCallBtn');
+    const fileInput = document.getElementById('chatFileInput');
+    const selectedFiles = document.getElementById('chatSelectedFiles');
+    let pendingAttachments = [];
+    let previousChatAvailable = false;
+    let patientNotificationsMarkedRead = false;
+    const seenDoctorMessageIds = new Set();
+
+    async function resolveAppointmentId() {
+      if (appointmentId) return;
+      const api = window.DockTalkAPI;
+      if (!api || !api.getToken()) return;
+      try {
+        const appointments = await api.getAppointments();
+        const doctorKey = window.DockTalkAppointmentAccess.normalizeName(doctor);
+        const appointment = appointments.find((item) =>
+          window.DockTalkAppointmentAccess.normalizeName(item.doctorName) === doctorKey &&
+          (openedFromNotification || window.DockTalkAppointmentAccess.isChatAvailable(item))
+        );
+        appointmentId = appointment?.id || '';
+      } catch (error) {
+        console.warn('Unable to resolve the appointment for this chat.', error);
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function appendAttachmentLinks(container, attachments) {
+      if (!Array.isArray(attachments) || !attachments.length) return;
+      const list = document.createElement('div');
+      list.className = 'chat-attachments';
+      attachments.forEach((attachment) => {
+        const link = document.createElement('a');
+        link.className = 'chat-attachment';
+        link.href = attachment.dataUrl;
+        link.download = attachment.name;
+        link.textContent = '📎 ' + attachment.name;
+        link.title = 'Download attachment';
+        list.appendChild(link);
+      });
+      container.appendChild(list);
+    }
+
+    function appendMessage(text, sender, attachments) {
+      const el = document.createElement('div');
+      el.className = sender === 'user' ? 'message me' : 'message them';
+      if (text) {
+        const copy = document.createElement('div');
+        copy.textContent = text;
+        el.appendChild(copy);
+      }
+      appendAttachmentLinks(el, attachments);
+      messages.appendChild(el);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    async function loadMessages() {
+      const api = window.DockTalkAPI;
+      if (!api || !api.getToken()) return;
+      try {
+        const saved = await api.loadChatMessages(appointmentId, doctor, openedFromNotification);
+        const hasNewDoctorMessage = saved.some((item) =>
+          item.sender === 'doctor' && item.id && !seenDoctorMessageIds.has(item.id)
+        );
+        messages.innerHTML = '';
+        if (!saved.length) {
+          const emptyState = document.createElement('div');
+          emptyState.className = 'message them';
+          emptyState.textContent = 'No messages yet. Start your conversation below.';
+          messages.appendChild(emptyState);
+        }
+        saved.forEach((item) => {
+          appendMessage(item.message, item.sender, item.attachments);
+          if (item.sender === 'doctor' && item.id) seenDoctorMessageIds.add(item.id);
+        });
+        if ((!patientNotificationsMarkedRead || hasNewDoctorMessage) &&
+          api.markPatientChatNotificationsReadForDoctor) {
+          try {
+            await api.markPatientChatNotificationsReadForDoctor(doctor);
+            patientNotificationsMarkedRead = true;
+          } catch (error) {
+            console.warn('Unable to mark chat notifications as read.', error);
+          }
+        }
+      } catch (error) {
+        console.warn('Unable to load saved chat messages.', error);
+      }
+    }
+
+    async function applyAppointmentAccess() {
+      const api = window.DockTalkAPI;
+      let chatAvailable = false;
+      let callAvailable = false;
+
+      if (api && api.getToken() && window.DockTalkAppointmentAccess) {
+        const doctorKey = window.DockTalkAppointmentAccess.normalizeName(doctor);
+        const [chatDoctors, activeDoctors] = await Promise.all([
+          window.DockTalkAppointmentAccess.getChatAvailableDoctors(),
+          window.DockTalkAppointmentAccess.getActiveDoctors()
+        ]);
+        chatAvailable = chatDoctors.has(doctorKey);
+        callAvailable = activeDoctors.has(
+          doctorKey
+        );
+      }
+
+      sendBtn.disabled = !chatAvailable;
+      callBtn.disabled = !callAvailable;
+      fileInput.disabled = !chatAvailable;
+      input.disabled = !chatAvailable;
+
+      const chatLockedMessage = chatAvailable
+        ? ''
+        : 'Chat unlocks when your doctor sends you a pre-appointment message or at the booked appointment time.';
+      const callLockedMessage = callAvailable
+        ? ''
+        : 'Calls are available during your booked appointment time for 1 hour.';
+
+      sendBtn.title = chatLockedMessage;
+      callBtn.title = callLockedMessage;
+      fileInput.title = chatLockedMessage;
+      input.placeholder = chatAvailable ? 'Type a message...' : chatLockedMessage;
+
+      if ((chatAvailable || openedFromNotification) && !previousChatAvailable) {
+        await loadMessages();
+      }
+      previousChatAvailable = chatAvailable;
+    }
+
+    fileInput.addEventListener('change', async () => {
+      const files = [...fileInput.files].slice(0, 3);
+      pendingAttachments = [];
+      selectedFiles.innerHTML = '';
+
+      for (const file of files) {
+        if (file.size > 2 * 1024 * 1024) {
+          alert(file.name + ' is larger than 2 MB.');
+          continue;
+        }
+
+        const dataUrl = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+        pendingAttachments.push({
+          name: file.name,
+          type: file.type || 'application/octet-stream',
+          size: file.size,
+          dataUrl
+        });
+      }
+
+      selectedFiles.innerHTML = pendingAttachments.map((attachment) =>
+        `<span>📎 ${escapeHtml(attachment.name)}</span>`
+      ).join('');
+    });
+
+    sendBtn.addEventListener('click', async () => {
+      const text = input.value.trim();
+      if (!text && !pendingAttachments.length) return;
+      const api = window.DockTalkAPI;
+      if (!api || !api.getToken()) {
+        alert('Please sign in before sending a message.');
+        return;
+      }
+      try {
+        await api.sendChatMessage({
+          appointmentId,
+          doctorName: doctor,
+          sender: 'user',
+          message: text,
+          attachments: pendingAttachments
+        });
+        appendMessage(text, 'user', pendingAttachments);
+        input.value = '';
+        fileInput.value = '';
+        pendingAttachments = [];
+        selectedFiles.innerHTML = '';
+      } catch (error) {
+        alert(`Message could not be saved: ${error.message}`);
+      }
+    });
+
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendBtn.click(); });
+
+    // Back and Close controls for standalone chat page
+    const hideClose = getParam('hideClose');
+    if (hideClose === '1' || hideClose === 'true') {
+      const pc = document.getElementById('pageClose'); if (pc) pc.style.display = 'none';
+    }
+    document.getElementById('pageBack').addEventListener('click', function(){
+      // If running inside an iframe, ask the parent to navigate back in its history
+      try{
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'chat-back' }, '*');
+          return;
+        }
+      }catch(e){}
+      history.back();
+    });
+    const pageCloseBtn = document.getElementById('pageClose');
+    if (pageCloseBtn) pageCloseBtn.addEventListener('click', function(){ window.location.href = 'MAIN.html'; });
+    resolveAppointmentId().then(applyAppointmentAccess);
+    setInterval(applyAppointmentAccess, 10000);
+    setInterval(() => {
+      if (previousChatAvailable) loadMessages();
+    }, 5000);
+  </script>
+</body>
+</html>

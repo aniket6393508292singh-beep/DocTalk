@@ -1,0 +1,155 @@
+.call-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1800;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(15, 23, 42, 0.72);
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.call-modal.active {
+    display: flex;
+}
+
+.call-card {
+    width: min(720px, 100%);
+    max-height: calc(100vh - 32px);
+    border-radius: 20px;
+    overflow: hidden;
+    background: #0f172a;
+    color: #fff;
+    box-shadow: 0 24px 70px rgba(2, 6, 23, 0.38);
+}
+
+.call-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 18px;
+}
+
+.call-header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.call-status {
+    display: block;
+    margin-top: 3px;
+    color: #bfdbfe;
+    font-size: 12px;
+}
+
+.call-close {
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    cursor: pointer;
+}
+
+.call-preview {
+    min-height: 280px;
+    aspect-ratio: 16 / 9;
+    position: relative;
+    display: grid;
+    place-items: center;
+    background:
+        radial-gradient(circle at 50% 45%, rgba(37,99,235,0.35), transparent 35%),
+        #111827;
+    overflow: hidden;
+}
+
+.call-preview video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+}
+
+.call-preview.audio-only video {
+    display: none;
+}
+
+.call-avatar {
+    display: grid;
+    place-items: center;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
+    font-size: 36px;
+    font-weight: 800;
+}
+
+.call-preview:not(.audio-only) .call-avatar {
+    display: none;
+}
+
+.call-error {
+    max-width: 460px;
+    margin: 12px;
+    text-align: center;
+    color: #fecaca;
+    line-height: 1.5;
+}
+
+.call-controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px;
+}
+
+.call-control {
+    min-width: 92px;
+    height: 44px;
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 999px;
+    background: rgba(255,255,255,0.10);
+    color: #fff;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.call-control.active {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.call-control.end-call {
+    border: 0;
+    background: #dc2626;
+}
+
+@media (max-width: 560px) {
+    .call-modal {
+        padding: 8px;
+    }
+
+    .call-card {
+        max-height: calc(100vh - 16px);
+    }
+
+    .call-preview {
+        min-height: 220px;
+        aspect-ratio: 4 / 3;
+    }
+
+    .call-controls {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 12px;
+    }
+
+    .call-control {
+        min-width: 88px;
+        flex: 1 1 88px;
+    }
+}

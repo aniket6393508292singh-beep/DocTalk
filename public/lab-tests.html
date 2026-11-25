@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Lab Tests</title>
+  <link rel="stylesheet" href="health-tools.css">
+</head>
+<body>
+  <div class="tools-container">
+    <header class="tools-header">
+      <button type="button" class="btn secondary back-link" onclick="history.back()">← Go Back</button>
+      <h1>Lab Tests</h1>
+      <p>Find lab tests and book sample collections from trusted labs near you.</p>
+    </header>
+
+    <section class="tool-card">
+      <h2>Popular Lab Panels</h2>
+      <p>Choose from common panels or build your own test order.</p>
+      <form id="labForm" class="tool-form" style="margin-top:18px;">
+        <div class="form-group">
+          <label for="labPanel">Select a lab panel</label>
+          <select id="labPanel">
+            <option value="wellness">Full Body Wellness Panel</option>
+            <option value="metabolic">Blood Sugar & Lipid Profile</option>
+            <option value="thyroid">Thyroid Profile (TSH, T3, T4)</option>
+            <option value="vitamins">Vitamin D + B12</option>
+            <option value="cbc">Complete Blood Count (CBC)</option>
+            <option value="custom">Custom Test Order</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Choose collection type</label>
+          <label><input type="radio" name="collectionType" value="home" checked> Home sample collection</label>
+          <label><input type="radio" name="collectionType" value="lab"> Lab visit</label>
+        </div>
+        <div class="tool-actions" style="margin-top:18px;">
+            <button class="btn primary" type="submit">Book Lab Test</button>
+            <a href="#" class="btn secondary call">Call Lab Support</a>
+          </div>
+      </form>
+
+        <!-- Booking modal for lab tests -->
+        <div id="bookModal" class="modal" role="dialog" aria-hidden="true" style="display:none;">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2>Book Lab Test</h2>
+              <button class="modal-close" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body">
+              <form id="bookForm">
+                <input type="hidden" name="panel" id="bookingPanel">
+                <input type="hidden" name="collection" id="bookingCollection">
+                <label>Name<br><input type="text" name="name" required></label>
+                <label>Date<br><input type="date" name="date" required id="bookingDate"></label>
+                <label>Time<br><input type="time" name="time" required></label>
+                <div class="modal-actions" style="margin-top:12px;">
+                  <button type="submit" class="btn primary">Confirm Booking</button>
+                  <button type="button" class="btn secondary modal-close">Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      <div id="labGuide" class="tool-result" style="display:none; margin-top:24px;">
+        <h3>How to use your kit</h3>
+        <p id="selectedGuide" style="margin-bottom:16px;"></p>
+        <h4>Next steps</h4>
+        <ol id="kitSteps" style="padding-left:20px; color:#475569; line-height:1.8;"></ol>
+        <p style="margin-top:18px; color:#475569;">If you need help at any time, use the Call Lab Support button above.</p>
+      </div>
+    </section>
+
+    <section class="tool-card" style="margin-top:18px;">
+      <h2>How it works</h2>
+      <ol style="padding-left:20px; color:#475569; line-height:1.8;">
+        <li>Select tests or a predefined health panel.</li>
+        <li>Choose home sample collection or lab visit.</li>
+        <li>Receive digital reports and expert guidance.</li>
+      </ol>
+    </section>
+  </div>
+
+  <div id="callModalLocal" class="modal" role="dialog" aria-hidden="true" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Call Lab Support</h2>
+        <button class="modal-close" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>Contact our lab support team to help choose the right tests or arrange sample collection.</p>
+        <div class="modal-actions">
+          <button type="button" class="btn secondary" id="audioCall">Audio Call</button>
+          <button type="button" class="btn secondary" id="videoCall">Video Call</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="api.js"></script>
+  <script>
+    document.addEventListener('click', function(e) {
+      const callLink = e.target.closest && e.target.closest('a.call');
+      const closeButton = e.target.closest && e.target.closest('.modal-close');
+      const overlay = e.target.closest && e.target.closest('.modal');
+      if (callLink) { e.preventDefault(); document.getElementById('callModalLocal').style.display = 'block'; }
+      if (closeButton) { e.preventDefault(); closeButton.closest('.modal').style.display = 'none'; }
+      if (overlay && e.target === overlay) overlay.style.display = 'none';
+    });
+    document.getElementById('audioCall').addEventListener('click', function(){ alert('Calling lab support (demo).'); document.getElementById('callModalLocal').style.display='none'; });
+    document.getElementById('videoCall').addEventListener('click', function(){ alert('Calling lab support (demo).'); document.getElementById('callModalLocal').style.display='none'; });
+    document.getElementById('labForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const panel = document.getElementById('labPanel').value;
+      const collection = document.querySelector('input[name="collectionType"]:checked').value;
+
+      try {
+        document.getElementById('bookingPanel').value = panel;
+        document.getElementById('bookingCollection').value = collection;
+        const dateInput = document.getElementById('bookingDate');
+        if (dateInput) dateInput.min = new Date().toISOString().split('T')[0];
+        document.getElementById('bookModal').style.display = 'block';
+      } catch (err) { console.error(err); }
+    });
+
+    document.getElementById('bookForm').addEventListener('submit', async function(ev){
+      ev.preventDefault();
+      const data = new FormData(this);
+      const name = data.get('name');
+      const date = data.get('date');
+      const time = data.get('time');
+      const panelKey = data.get('panel');
+      const collection = data.get('collection');
+      const names = {
+        wellness: 'Full Body Wellness Panel',
+        metabolic: 'Blood Sugar & Lipid Profile',
+        thyroid: 'Thyroid Profile (TSH, T3, T4)',
+        vitamins: 'Vitamin D + B12',
+        cbc: 'Complete Blood Count (CBC)',
+        custom: 'Custom Test Order'
+      };
+      const panelName = names[panelKey] || panelKey;
+
+      const api = window.DockTalkAPI;
+      if (!api || !api.getToken()) {
+        alert('Please sign in before booking a lab test.');
+        return;
+      }
+
+      try {
+        await api.createLabBooking({
+          testName: panelName,
+          preferredDate: date,
+          preferredTime: time,
+          notes: `${name} selected ${collection} collection.`
+        });
+      } catch (error) {
+        alert(`Lab booking could not be saved: ${error.message}`);
+        return;
+      }
+
+      alert('Booking requested for ' + name + '\nTest: ' + panelName + '\nCollection: ' + collection + '\nDate: ' + date + ' ' + time + '\nWe will confirm shortly.');
+      document.getElementById('bookModal').style.display = 'none';
+      this.reset();
+      document.getElementById('selectedGuide').textContent = 'Selected: ' + panelName + ' with ' + (collection === 'home' ? 'home collection' : 'lab visit') + '.';
+      const steps = collection === 'home'
+        ? ['Confirm your delivery address.', 'Open the kit and follow the step-by-step collection guide.', 'Place the sample in the prepaid return packaging and schedule pickup.']
+        : ['Visit the lab at your scheduled time.', 'Bring the kit confirmation and ID.', 'Give the sample to the technician and receive your report digitally.'];
+      const stepsList = document.getElementById('kitSteps');
+      stepsList.innerHTML = '';
+      steps.forEach(function(step) { const li = document.createElement('li'); li.textContent = step; stepsList.appendChild(li); });
+      document.getElementById('labGuide').style.display = 'block';
+    });
+
+    document.addEventListener('click', function(e){
+      const closeButton = e.target.closest && e.target.closest('.modal-close');
+      const overlay = e.target.closest && e.target.closest('#bookModal');
+      if (closeButton) { e.preventDefault(); closeButton.closest('.modal').style.display = 'none'; }
+      if (overlay && e.target === overlay) overlay.style.display = 'none';
+    });
+  </script>
+</body>
+</html>

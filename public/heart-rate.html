@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Heart Rate Guide</title>
+  <link rel="stylesheet" href="health-tools.css">
+  <style> /* small page-level adjustments */
+    .guide-list { margin-top:12px; }
+  </style>
+</head>
+<body>
+  <div class="tools-container">
+    <header class="tools-header">
+      <button type="button" class="btn secondary back-link" onclick="history.back()">← Go Back</button>
+      <h1>Heart Rate Guide</h1>
+      <p>Simple instructions to measure your pulse and a small tap-based counter to estimate beats per minute.</p>
+    </header>
+
+    <section class="tool-card">
+      <h2>How to check your pulse</h2>
+      <ol class="guide-list">
+        <li>Find your wrist (radial) or neck (carotid).</li>
+        <li>Use two fingers (index and middle) and press lightly.</li>
+        <li>Count beats for 15 seconds and multiply by 4 to get BPM.</li>
+      </ol>
+
+      <h3>Quick Tap Counter</h3>
+      <p>Tap the button once per beat for a short period, then press <strong>Calculate</strong>.</p>
+
+      <div style="display:flex;gap:12px;align-items:center;margin-top:12px;">
+        <button id="tapBtn" class="btn primary">Tap</button>
+        <button id="resetTap" class="btn secondary">Reset</button>
+        <button id="calcTap" class="btn primary">Calculate</button>
+      </div>
+
+      <p id="tapInfo" style="margin-top:12px;color:#374151;">Taps: <span id="tapCount">0</span> — Duration: <span id="tapDuration">0.0</span>s</p>
+      <p id="bpmResult" style="font-weight:700;color:#0f172a;"></p>
+
+      <div class="tool-actions" style="margin-top:12px;">
+        <a href="chat.html?doctor=Cardio+Consult&hideClose=1" class="btn primary chat" data-doctor="Cardiologist" data-hide-close="true">Chat with Cardiologist</a>
+        <a href="#" class="btn secondary call">Call Now</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- Local Call modal for this page -->
+  <div id="callModalLocal" class="modal" role="dialog" aria-hidden="true" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Call Doctor</h2>
+        <button class="modal-close" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>Choose how you'd like to connect with a cardiologist. Select audio or video call.</p>
+        <div class="modal-actions">
+          <button type="button" class="btn secondary" id="audioCall">Audio Call</button>
+          <button type="button" class="btn secondary" id="videoCall">Video Call</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      let taps = 0, start = null, lastTap = null;
+      const tapBtn = document.getElementById('tapBtn');
+      const resetBtn = document.getElementById('resetTap');
+      const calcBtn = document.getElementById('calcTap');
+      const tapCount = document.getElementById('tapCount');
+      const tapDuration = document.getElementById('tapDuration');
+      const bpmResult = document.getElementById('bpmResult');
+
+      tapBtn.addEventListener('click', () => {
+        const now = Date.now();
+        if (!start) start = now;
+        taps += 1; lastTap = now;
+        const duration = ((now - start) / 1000);
+        tapCount.textContent = taps;
+        tapDuration.textContent = duration.toFixed(1);
+        bpmResult.textContent = '';
+      });
+
+      resetBtn.addEventListener('click', () => { taps = 0; start = null; lastTap = null; tapCount.textContent = 0; tapDuration.textContent = '0.0'; bpmResult.textContent = ''; });
+
+      calcBtn.addEventListener('click', () => {
+        if (!start || taps < 1) { bpmResult.textContent = 'Tap at least once to calculate.'; return; }
+        const duration = ( (lastTap - start) / 1000 );
+        if (duration < 0.5) { bpmResult.textContent = 'Too short — try tapping for a few seconds.'; return; }
+        const bpm = Math.round((taps / duration) * 60);
+        bpmResult.textContent = `Estimated heart rate: ${bpm} BPM`;
+      });
+
+      // Call modal handling for this standalone page
+      document.addEventListener('click', function(e){
+        const callLink = e.target.closest && e.target.closest('a.call');
+        const closeButton = e.target.closest && e.target.closest('.modal-close');
+        const overlay = e.target.closest && e.target.closest('.modal');
+        if (callLink) { e.preventDefault(); document.getElementById('callModalLocal').style.display = 'block'; }
+        if (closeButton) { e.preventDefault(); closeButton.closest('.modal').style.display = 'none'; }
+        if (overlay && e.target === overlay) overlay.style.display = 'none';
+      });
+
+      document.getElementById('audioCall').addEventListener('click', function(){ alert('Starting audio call (demo).'); document.getElementById('callModalLocal').style.display='none'; });
+      document.getElementById('videoCall').addEventListener('click', function(){ alert('Starting video call (demo).'); document.getElementById('callModalLocal').style.display='none'; });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard - DockTalk</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="doctor.css">
+</head>
+<body class="doctor-dashboard-page">
+    <nav class="doctor-dashboard-nav">
+        <a class="doctor-brand" href="MAIN.html"><span>🩺</span> DockTalk</a>
+        <div class="doctor-nav-actions">
+            <a href="MAIN.html" class="doctor-back">View Website</a>
+            <button type="button" id="doctorLogout" class="doctor-secondary-button">Sign Out</button>
+        </div>
+    </nav>
+
+    <main class="doctor-dashboard-shell">
+        <header class="doctor-dashboard-header">
+            <div>
+                <p class="doctor-eyebrow">Doctor workspace</p>
+                <h1 id="doctorDashboardName">Your Dashboard</h1>
+                <p id="doctorDashboardMeta">Loading professional profile...</p>
+            </div>
+            <div class="doctor-availability-card">
+                <span class="doctor-status-dot"></span>
+                <div>
+                    <strong>Available</strong>
+                    <small id="doctorAvailabilityText">Check availability</small>
+                </div>
+            </div>
+        </header>
+
+        <section class="doctor-stat-grid" aria-label="Practice summary">
+            <article class="doctor-stat-card">
+                <span>Today's appointments</span>
+                <strong id="todayAppointmentCount">0</strong>
+            </article>
+            <article class="doctor-stat-card">
+                <span>Pending requests</span>
+                <strong id="pendingAppointmentCount">0</strong>
+            </article>
+            <article class="doctor-stat-card">
+                <span>Total patients</span>
+                <strong id="patientCount">0</strong>
+            </article>
+            <article class="doctor-stat-card">
+                <span>Unread messages</span>
+                <strong id="messageCount">0</strong>
+            </article>
+        </section>
+
+        <section class="doctor-dashboard-grid">
+            <article class="doctor-panel doctor-appointments-panel">
+                <div class="doctor-panel-header">
+                    <div>
+                        <p class="doctor-eyebrow">Patient requests</p>
+                        <h2>Appointments</h2>
+                    </div>
+                    <select id="appointmentFilter" aria-label="Filter appointments">
+                        <option value="all">All statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div id="doctorAppointments" class="doctor-appointment-list">
+                    <p class="doctor-empty-state">Loading appointments...</p>
+                </div>
+            </article>
+
+            <aside class="doctor-panel doctor-patients-panel">
+                <div class="doctor-panel-header">
+                    <div>
+                        <p class="doctor-eyebrow">Active conversations</p>
+                        <h2>Patients</h2>
+                    </div>
+                </div>
+                <div id="doctorPatientList" class="doctor-patient-list">
+                    <p class="doctor-empty-state">Loading patients...</p>
+                </div>
+            </aside>
+        </section>
+    </main>
+
+    <div id="doctorHistoryModal" class="doctor-chat-modal" aria-hidden="true">
+        <div class="doctor-history-card" role="dialog" aria-modal="true" aria-labelledby="doctorHistoryTitle">
+            <header class="doctor-chat-header">
+                <div>
+                    <p class="doctor-eyebrow">Private patient record</p>
+                    <h2 id="doctorHistoryTitle">Patient history</h2>
+                </div>
+                <button type="button" id="closeDoctorHistory" aria-label="Close patient history">✕</button>
+            </header>
+            <div class="doctor-history-content">
+                <section>
+                    <h3>Visit history</h3>
+                    <div id="doctorPatientAppointmentsHistory"></div>
+                </section>
+                <section>
+                    <h3>Prescribed medicines</h3>
+                    <div id="doctorPatientPrescriptionHistory"></div>
+                </section>
+                <section>
+                    <h3>Record a prescription</h3>
+                    <form id="doctorPrescriptionForm" class="doctor-prescription-form">
+                        <label>Completed visit
+                            <select id="prescriptionAppointmentId" required></select>
+                        </label>
+                        <div id="prescriptionMedicineList">
+                            <div class="doctor-prescription-medicine">
+                                <label>Medicine name
+                                    <input name="medicineName" maxlength="200" required>
+                                </label>
+                                <label>Dosage
+                                    <input name="dosage" maxlength="120" placeholder="As prescribed" required>
+                                </label>
+                                <label>Frequency
+                                    <input name="frequency" maxlength="120" placeholder="e.g. twice daily" required>
+                                </label>
+                                <label>Duration
+                                    <input name="duration" maxlength="120" placeholder="e.g. 5 days" required>
+                                </label>
+                                <label>Instructions (optional)
+                                    <input name="instructions" maxlength="500">
+                                </label>
+                            </div>
+                        </div>
+                        <button type="button" id="addPrescriptionMedicine" class="doctor-secondary-button">Add another medicine</button>
+                        <label>Prescription notes (optional)
+                            <textarea name="notes" maxlength="2000" rows="2"></textarea>
+                        </label>
+                        <button type="submit" class="doctor-primary-button">Save prescription</button>
+                        <p id="doctorPrescriptionStatus" class="doctor-form-status" aria-live="polite"></p>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <div id="doctorChatModal" class="doctor-chat-modal" aria-hidden="true">
+        <div class="doctor-chat-card" role="dialog" aria-modal="true" aria-labelledby="doctorChatTitle">
+            <header class="doctor-chat-header">
+                <div>
+                    <p class="doctor-eyebrow">Patient conversation</p>
+                    <h2 id="doctorChatTitle">Patient</h2>
+                    <small class="doctor-prechat-note">Your first message for an upcoming appointment unlocks patient chat early. Calls stay locked until the booked time.</small>
+                </div>
+                <button type="button" id="closeDoctorChat" aria-label="Close chat">✕</button>
+            </header>
+            <div id="doctorChatMessages" class="doctor-chat-messages"></div>
+            <form id="doctorChatForm" class="doctor-chat-form">
+                <input type="hidden" id="doctorChatPatientId">
+                <label class="doctor-chat-file-button" for="doctorChatFileInput" title="Upload file">📎
+                    <input id="doctorChatFileInput" type="file" accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.heic" multiple hidden>
+                </label>
+                <input id="doctorChatInput" type="text" placeholder="Write a reply..." autocomplete="off">
+                <button type="submit" class="doctor-primary-button">Send</button>
+            </form>
+            <p id="doctorChatStatus" class="doctor-form-status" aria-live="polite"></p>
+        </div>
+    </div>
+
+    <script src="api.js"></script>
+    <script>
+        const api = window.DockTalkAPI;
+        let appointments = [];
+        let messages = [];
+        let activePatientId = null;
+        let activeAppointmentId = null;
+        let historyPatientId = null;
+        let patientHistoryAppointments = [];
+        let pendingDoctorAttachments = [];
+
+        const escapeHtml = (value) => String(value || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+
+        function formatDate(dateText) {
+            if (!dateText) return 'No date';
+            const date = new Date(dateText + 'T00:00:00');
+            return Number.isNaN(date.getTime()) ? dateText : date.toLocaleDateString();
+        }
+
+        function getPatientName(patient) {
+            if (patient && typeof patient === 'object') return patient.name || 'Patient';
+            return 'Patient';
+        }
+
+        function getPatientId(patient) {
+            if (typeof patient === 'string') return patient;
+            if (patient && typeof patient === 'object') return patient.id || patient._id || '';
+            return '';
+        }
+
+        async function loadDashboard() {
+            if (!api || !api.getToken()) {
+                window.location.href = 'MAIN.html';
+                return;
+            }
+
+            const currentUser = api.getCurrentUser();
+            if (!currentUser || currentUser.role !== 'doctor') {
+                window.location.href = 'MAIN.html';
+                return;
+            }
+
+            try {
+                const [profileResult, appointmentResult, messageResult] = await Promise.all([
+                    api.getDoctorProfile(),
+                    api.getDoctorAppointments(),
+                    api.getDoctorMessages()
+                ]);
+
+                const doctor = profileResult.doctor;
+                document.getElementById('doctorDashboardName').textContent = doctor.name;
+                document.getElementById('doctorDashboardMeta').textContent =
+                    `${doctor.specialty || 'Doctor'} • ${doctor.degree || 'Medical professional'} • ${doctor.location || 'Location not provided'}`;
+                document.getElementById('doctorAvailabilityText').textContent =
+                    doctor.availability || 'Available by appointment';
+
+                appointments = appointmentResult;
+                messages = messageResult;
+                renderAppointments();
+                renderPatients();
+                renderStats();
+            } catch (error) {
+                document.getElementById('doctorAppointments').innerHTML =
+                    `<p class="doctor-empty-state error">Could not load dashboard: ${escapeHtml(error.message)}</p>`;
+            }
+        }
+
+        function renderStats() {
+            const today = new Date().toISOString().slice(0, 10);
+            const todayCount = appointments.filter((item) => item.appointmentDate === today).length;
+            const pendingCount = appointments.filter((item) => item.status === 'pending').length;
+            const patientIds = new Set();
+
+            appointments.forEach((item) => {
+                const id = getPatientId(item.userId);
+                if (id) patientIds.add(id);
+            });
+            messages.forEach((item) => {
+                const id = getPatientId(item.userId);
+                if (id) patientIds.add(id);
+            });
+
+            document.getElementById('todayAppointmentCount').textContent = todayCount;
+            document.getElementById('pendingAppointmentCount').textContent = pendingCount;
+            document.getElementById('patientCount').textContent = patientIds.size;
+            document.getElementById('messageCount').textContent =
+                messages.filter((item) => item.sender === 'user').length;
+        }
+
+        function renderAppointments() {
+            const filter = document.getElementById('appointmentFilter').value;
+            const filtered = filter === 'all'
+                ? appointments
+                : appointments.filter((item) =>
+                    filter === 'approved'
+                        ? ['approved', 'confirmed'].includes(String(item.status || 'pending').toLowerCase())
+                        : String(item.status || 'pending') === filter
+                );
+            const container = document.getElementById('doctorAppointments');
+
+            if (!filtered.length) {
+                container.innerHTML = '<p class="doctor-empty-state">No appointments match this filter.</p>';
+                return;
+            }
+
+            container.innerHTML = filtered.map((item) => {
+                const patient = item.userId || {};
+                const patientName = getPatientName(patient);
+                const patientId = getPatientId(patient);
+                const status = String(item.status || 'pending').toLowerCase();
+                const today = new Date();
+                const minDate = [
+                    today.getFullYear(),
+                    String(today.getMonth() + 1).padStart(2, '0'),
+                    String(today.getDate()).padStart(2, '0')
+                ].join('-');
+                return `
+                    <article class="doctor-appointment-card">
+                        <div class="doctor-appointment-main">
+                            <div class="doctor-patient-avatar">${escapeHtml(patientName.slice(0, 2).toUpperCase())}</div>
+                            <div>
+                                <h3>${escapeHtml(patientName)}</h3>
+                                <p>${escapeHtml(patient.email || 'Email not provided')}</p>
+                                <p>${escapeHtml(item.contactPhone || patient.phone || 'Phone not provided')}</p>
+                            </div>
+                        </div>
+                        <div class="doctor-appointment-details">
+                            <span>${escapeHtml(formatDate(item.appointmentDate))} at ${escapeHtml(item.appointmentTime)}</span>
+                            <span>${escapeHtml(item.mode || 'video')} consultation</span>
+                            ${item.notes ? `<p>${escapeHtml(item.notes)}</p>` : ''}
+                        </div>
+                        <div class="doctor-appointment-actions">
+                            ${status === 'pending' ? `
+                                <label class="doctor-slot-field">Appointment date
+                                    <input type="date" min="${minDate}" value="${escapeHtml(item.appointmentDate || '')}" data-slot-date="${escapeHtml(item.id)}">
+                                </label>
+                                <label class="doctor-slot-field">Appointment time
+                                    <input type="time" value="${escapeHtml(item.appointmentTime || '')}" data-slot-time="${escapeHtml(item.id)}">
+                                </label>
+                                <button type="button" class="doctor-secondary-button" data-status-action="approved" data-status-select="${escapeHtml(item.id)}">Approve selected slot</button>
+                                <button type="button" class="doctor-secondary-button" data-status-action="rejected" data-status-select="${escapeHtml(item.id)}">Reject</button>
+                            ` : `
+                                <span class="doctor-appointment-status ${status}">${escapeHtml(status)}</span>
+                                ${['approved', 'confirmed'].includes(status)
+                                    ? `<button type="button" class="doctor-secondary-button" data-status-action="completed" data-status-select="${escapeHtml(item.id)}">Mark visit complete</button>`
+                                    : ''}
+                            `}
+                            ${patientId
+                                ? `<button type="button" class="doctor-secondary-button" data-chat-patient="${escapeHtml(patientId)}" data-chat-appointment="${escapeHtml(item.id)}" data-patient-name="${escapeHtml(patientName)}">Chat</button>`
+                                : '<span class="doctor-chat-unavailable" title="This appointment is not linked to a patient account. Ask the patient to sign in and book again.">Chat unavailable: no linked patient account</span>'}
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        function renderPatients() {
+            const patientMap = new Map();
+
+            appointments.forEach((item) => {
+                const patient = item.userId || {};
+                const id = getPatientId(patient);
+                if (id) patientMap.set(id, patient);
+            });
+            messages.forEach((item) => {
+                const patient = item.userId || {};
+                const id = getPatientId(patient);
+                if (id && !patientMap.has(id)) patientMap.set(id, patient);
+            });
+
+            const container = document.getElementById('doctorPatientList');
+            if (!patientMap.size) {
+                container.innerHTML = '<p class="doctor-empty-state">No patient conversations yet.</p>';
+                return;
+            }
+
+            container.innerHTML = [...patientMap.entries()].map(([id, patient]) => {
+                const name = getPatientName(patient);
+                const hasAppointmentHistory = appointments.some((item) => getPatientId(item.userId) === id);
+                const lastMessage = messages
+                    .filter((item) => getPatientId(item.userId) === id)
+                    .at(-1);
+                const chatAppointment = appointments
+                    .filter((item) => getPatientId(item.userId) === id)
+                    .at(-1);
+                return `
+                    <div class="doctor-patient-row">
+                        <button type="button" class="doctor-patient-card" data-chat-patient="${escapeHtml(id)}" data-chat-appointment="${escapeHtml(chatAppointment?.id || lastMessage?.appointmentId || '')}" data-patient-name="${escapeHtml(name)}">
+                            <span class="doctor-patient-avatar">${escapeHtml(name.slice(0, 2).toUpperCase())}</span>
+                            <span class="doctor-patient-copy">
+                                <strong>${escapeHtml(name)}</strong>
+                                <small>${escapeHtml(lastMessage ? lastMessage.message : 'Start a conversation')}</small>
+                            </span>
+                        </button>
+                        <button type="button" class="doctor-secondary-button" data-patient-history="${escapeHtml(id)}" data-patient-name="${escapeHtml(name)}" ${hasAppointmentHistory ? '' : 'disabled'}>History</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function openPatientHistory(patientId, patientName) {
+            historyPatientId = patientId;
+            document.getElementById('doctorHistoryTitle').textContent = patientName + ' — History';
+            document.getElementById('doctorHistoryModal').classList.add('active');
+            document.getElementById('doctorHistoryModal').setAttribute('aria-hidden', 'false');
+            const prescriptionForm = document.getElementById('doctorPrescriptionForm');
+            prescriptionForm.reset();
+            prescriptionForm.querySelectorAll('input, textarea, select, button').forEach((field) => {
+                field.disabled = true;
+            });
+            document.querySelectorAll('.doctor-prescription-medicine').forEach((row, index) => {
+                if (index > 0) row.remove();
+            });
+            document.getElementById('doctorPatientAppointmentsHistory').innerHTML =
+                '<p class="doctor-empty-state">Loading visit history...</p>';
+            document.getElementById('doctorPatientPrescriptionHistory').innerHTML = '';
+            document.getElementById('doctorPrescriptionStatus').textContent = '';
+
+            try {
+                const history = await api.getDoctorPatientHistory(patientId);
+                if (historyPatientId !== patientId) return;
+                patientHistoryAppointments = history.appointments || [];
+                document.getElementById('doctorPatientAppointmentsHistory').innerHTML =
+                    patientHistoryAppointments.length
+                        ? patientHistoryAppointments.map((item) => `
+                            <article class="doctor-history-entry">
+                                <strong>${escapeHtml(formatDate(item.appointmentDate))} at ${escapeHtml(item.appointmentTime)}</strong>
+                                <span class="doctor-appointment-status ${escapeHtml(item.status)}">${escapeHtml(item.status)}</span>
+                                ${item.notes ? `<p>${escapeHtml(item.notes)}</p>` : ''}
+                            </article>
+                        `).join('')
+                        : '<p class="doctor-empty-state">No visits recorded.</p>';
+
+                const prescriptions = history.prescriptions || [];
+                document.getElementById('doctorPatientPrescriptionHistory').innerHTML =
+                    prescriptions.length
+                        ? prescriptions.map((prescription) => `
+                            <article class="doctor-history-entry">
+                                <strong>Prescribed ${escapeHtml(new Date(prescription.created_at).toLocaleDateString())}</strong>
+                                <ul>${(prescription.medicines || []).map((medicine) => `
+                                    <li><strong>${escapeHtml(medicine.name)}</strong> — ${escapeHtml(medicine.dosage)}, ${escapeHtml(medicine.frequency)}, ${escapeHtml(medicine.duration)}
+                                        ${medicine.instructions ? `<br>${escapeHtml(medicine.instructions)}` : ''}
+                                    </li>
+                                `).join('')}</ul>
+                                ${prescription.notes ? `<p>${escapeHtml(prescription.notes)}</p>` : ''}
+                            </article>
+                        `).join('')
+                        : '<p class="doctor-empty-state">No prescriptions recorded.</p>';
+
+                const completedAppointments = patientHistoryAppointments.filter((item) => item.status === 'completed');
+                const select = document.getElementById('prescriptionAppointmentId');
+                select.innerHTML = '<option value="">Select a completed visit</option>' +
+                    completedAppointments.map((item) =>
+                        `<option value="${escapeHtml(item.id)}">${escapeHtml(formatDate(item.appointmentDate))} at ${escapeHtml(item.appointmentTime)}</option>`
+                    ).join('');
+                prescriptionForm.querySelectorAll('input, textarea, select, button')
+                    .forEach((field) => { field.disabled = !completedAppointments.length; });
+                if (!completedAppointments.length) {
+                    document.getElementById('doctorPrescriptionStatus').textContent =
+                        'Mark a visit complete before recording its prescription.';
+                }
+            } catch (error) {
+                if (historyPatientId !== patientId) return;
+                document.getElementById('doctorPatientAppointmentsHistory').innerHTML =
+                    `<p class="doctor-empty-state error">${escapeHtml(error.message)}</p>`;
+            }
+        }
+
+        function openChat(patientId, patientName, appointmentId) {
+            activePatientId = patientId;
+            activeAppointmentId = appointmentId;
+            document.getElementById('doctorChatPatientId').value = patientId;
+            document.getElementById('doctorChatTitle').textContent = patientName || 'Patient';
+            document.getElementById('doctorChatStatus').textContent = '';
+            document.getElementById('doctorChatModal').classList.add('active');
+            document.getElementById('doctorChatModal').setAttribute('aria-hidden', 'false');
+            renderChat();
+        }
+
+        function renderChat() {
+            const container = document.getElementById('doctorChatMessages');
+            const conversation = messages.filter((item) =>
+                getPatientId(item.userId) === activePatientId &&
+                item.appointmentId === activeAppointmentId
+            );
+
+            if (!conversation.length) {
+                container.innerHTML = '<p class="doctor-empty-state">No messages yet. Send the first reply.</p>';
+                return;
+            }
+
+            container.innerHTML = conversation.map((item) => {
+                const attachmentHtml = Array.isArray(item.attachments) && item.attachments.length
+                    ? `<div class="doctor-chat-attachments">${item.attachments.map((attachment) =>
+                        `<a class="doctor-chat-attachment" href="${escapeHtml(attachment.dataUrl)}" download="${escapeHtml(attachment.name)}">📎 ${escapeHtml(attachment.name)}</a>`
+                    ).join('')}</div>`
+                    : '';
+                return `
+                    <div class="doctor-chat-message ${item.sender === 'doctor' ? 'sent' : 'received'}">
+                        ${item.message ? escapeHtml(item.message) : ''}
+                        ${attachmentHtml}
+                    </div>
+                `;
+            }).join('');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        document.getElementById('appointmentFilter').addEventListener('change', renderAppointments);
+
+        document.getElementById('doctorAppointments').addEventListener('click', async (event) => {
+            const action = event.target.closest('[data-status-action]');
+            if (!action) return;
+            const status = action.dataset.statusAction;
+            const appointmentSlot = {};
+            if (status === 'approved') {
+                const appointmentId = action.dataset.statusSelect;
+                const dateInput = document.querySelector(`[data-slot-date="${CSS.escape(appointmentId)}"]`);
+                const timeInput = document.querySelector(`[data-slot-time="${CSS.escape(appointmentId)}"]`);
+                if (!dateInput || !timeInput || !dateInput.value || !timeInput.value) {
+                    alert('Select an appointment date and time before approving.');
+                    return;
+                }
+                appointmentSlot.date = dateInput.value;
+                appointmentSlot.time = timeInput.value;
+            }
+            action.disabled = true;
+            try {
+                const result = await api.updateDoctorAppointmentStatus(
+                    action.dataset.statusSelect,
+                    status,
+                    appointmentSlot
+                );
+                const item = appointments.find((appointment) => appointment.id === action.dataset.statusSelect);
+                if (item) Object.assign(item, result.appointment);
+                renderAppointments();
+                renderStats();
+            } catch (error) {
+                action.disabled = false;
+                alert(error.message);
+            }
+        });
+
+        document.body.addEventListener('click', (event) => {
+            const historyButton = event.target.closest('[data-patient-history]');
+            if (historyButton && historyButton.dataset.patientHistory) {
+                openPatientHistory(historyButton.dataset.patientHistory, historyButton.dataset.patientName);
+                return;
+            }
+            const chatButton = event.target.closest('[data-chat-patient]');
+            if (chatButton && chatButton.dataset.chatPatient) {
+                openChat(
+                    chatButton.dataset.chatPatient,
+                    chatButton.dataset.patientName,
+                    chatButton.dataset.chatAppointment
+                );
+            }
+        });
+
+        document.getElementById('closeDoctorHistory').addEventListener('click', () => {
+            document.getElementById('doctorHistoryModal').classList.remove('active');
+            document.getElementById('doctorHistoryModal').setAttribute('aria-hidden', 'true');
+        });
+
+        document.getElementById('doctorHistoryModal').addEventListener('click', (event) => {
+            if (event.target === event.currentTarget) {
+                document.getElementById('closeDoctorHistory').click();
+            }
+        });
+
+        document.getElementById('addPrescriptionMedicine').addEventListener('click', () => {
+            const list = document.getElementById('prescriptionMedicineList');
+            const rows = list.querySelectorAll('.doctor-prescription-medicine');
+            if (rows.length >= 20) return;
+            const row = rows[0].cloneNode(true);
+            row.querySelectorAll('input').forEach((input) => { input.value = ''; });
+            const remove = document.createElement('button');
+            remove.type = 'button';
+            remove.className = 'doctor-secondary-button doctor-remove-medicine';
+            remove.textContent = 'Remove medicine';
+            row.appendChild(remove);
+            list.appendChild(row);
+        });
+
+        document.getElementById('prescriptionMedicineList').addEventListener('click', (event) => {
+            const remove = event.target.closest('.doctor-remove-medicine');
+            if (remove && document.querySelectorAll('.doctor-prescription-medicine').length > 1) {
+                remove.closest('.doctor-prescription-medicine').remove();
+            }
+        });
+
+        document.getElementById('doctorPrescriptionForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const form = event.currentTarget;
+            const data = new FormData(form);
+            const status = document.getElementById('doctorPrescriptionStatus');
+            const submit = form.querySelector('button[type="submit"]');
+            submit.disabled = true;
+            status.textContent = 'Saving prescription...';
+            try {
+                await api.createDoctorPrescription({
+                    appointmentId: document.getElementById('prescriptionAppointmentId').value,
+                    medicines: [...form.querySelectorAll('.doctor-prescription-medicine')].map((row) => ({
+                        name: row.querySelector('[name="medicineName"]').value,
+                        dosage: row.querySelector('[name="dosage"]').value,
+                        frequency: row.querySelector('[name="frequency"]').value,
+                        duration: row.querySelector('[name="duration"]').value,
+                        instructions: row.querySelector('[name="instructions"]').value
+                    })),
+                    notes: data.get('notes')
+                });
+                form.reset();
+                document.querySelectorAll('.doctor-prescription-medicine').forEach((row, index) => {
+                    if (index > 0) row.remove();
+                });
+                await openPatientHistory(historyPatientId, document.getElementById('doctorHistoryTitle').textContent.replace(/ — History$/, ''));
+                status.textContent = 'Prescription saved.';
+            } catch (error) {
+                status.textContent = error.message;
+                submit.disabled = false;
+            }
+        });
+
+        document.getElementById('closeDoctorChat').addEventListener('click', () => {
+            document.getElementById('doctorChatModal').classList.remove('active');
+            document.getElementById('doctorChatModal').setAttribute('aria-hidden', 'true');
+        });
+
+        document.getElementById('doctorChatModal').addEventListener('click', (event) => {
+            if (event.target === event.currentTarget) {
+                document.getElementById('closeDoctorChat').click();
+            }
+        });
+
+        document.getElementById('doctorChatFileInput').addEventListener('change', async (event) => {
+            const files = [...event.target.files].slice(0, 3);
+            pendingDoctorAttachments = [];
+
+            for (const file of files) {
+                if (file.size > 2 * 1024 * 1024) {
+                    alert(file.name + ' is larger than 2 MB.');
+                    continue;
+                }
+
+                const dataUrl = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+                pendingDoctorAttachments.push({
+                    name: file.name,
+                    type: file.type || 'application/octet-stream',
+                    size: file.size,
+                    dataUrl
+                });
+            }
+        });
+
+        document.getElementById('doctorChatForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const input = document.getElementById('doctorChatInput');
+            const text = input.value.trim();
+            if ((!text && !pendingDoctorAttachments.length) || !activePatientId) return;
+
+            const sendButton = event.currentTarget.querySelector('button[type="submit"]');
+            const chatStatus = document.getElementById('doctorChatStatus');
+            sendButton.disabled = true;
+            chatStatus.textContent = 'Sending message...';
+            try {
+                const result = await api.sendDoctorMessage(
+                    activePatientId,
+                    activeAppointmentId,
+                    text,
+                    pendingDoctorAttachments
+                );
+                messages.push(result.data);
+                input.value = '';
+                document.getElementById('doctorChatFileInput').value = '';
+                pendingDoctorAttachments = [];
+                renderChat();
+                renderPatients();
+                renderStats();
+                chatStatus.textContent = result.preChatUnlocked
+                    ? 'Message sent. Patient chat is now unlocked for the upcoming appointment.'
+                    : 'Message sent.';
+            } catch (error) {
+                chatStatus.textContent = error.message;
+                alert(error.message);
+            } finally {
+                sendButton.disabled = false;
+            }
+        });
+
+        document.getElementById('doctorLogout').addEventListener('click', () => {
+            api.clearSession();
+            window.location.href = 'MAIN.html';
+        });
+
+        loadDashboard();
+    </script>
+</body>
+</html>

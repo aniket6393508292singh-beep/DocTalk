@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Chat with a Doctor</title>
+    <link rel="stylesheet" href="chat.css">
+    <link rel="stylesheet" href="call.css">
+    <script>
+        if (new URL(location.href).searchParams.get('mode') === 'appointments') {
+            document.documentElement.classList.add('appointments-mode');
+        }
+    </script>
+    <style>
+        html.appointments-mode .list-section,
+        html.appointments-mode .doctor-list {
+            display: none;
+        }
+
+        html.appointments-mode .appointments-loading {
+            display: block;
+        }
+        .list-section {
+            padding: 18px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+
+        .doctor-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        .doctor-item {
+            background: #fff;
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 6px 20px rgba(2, 6, 23, 0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .doctor-name {
+            font-weight: 700;
+        }
+
+        .doctor-meta {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .small-btn {
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .small-btn:disabled,
+        .small-btn[aria-disabled="true"] {
+            cursor: not-allowed;
+            opacity: 0.45;
+        }
+
+        .call {
+            background: #eef2ff;
+            color: #3730a3;
+        }
+
+        .doctor-item .chat[aria-disabled="true"],
+        .doctor-item .call[aria-disabled="true"] {
+            opacity: 0.45;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .book {
+            background: linear-gradient(90deg, #2563eb, #4f46e5);
+            color: #fff;
+        }
+
+        .chat {
+            background: linear-gradient(90deg, #06b6d4, #0891b2);
+            color: #fff;
+        }
+
+        .page {
+            max-width: 1100px;
+            margin: 36px auto;
+            padding: 0 16px;
+        }
+    </style>
+</head>
+
+<body class="chat-page">
+    <div class="page">
+        <div class="chat-header">
+            <button id="doctorListBack" class="chat-modal-back" type="button" aria-label="Back">←</button>
+            <h2>Chat with a Doctor</h2>
+        </div>
+        <div id="appointmentsLoading" class="doctor-item" style="display:none;">
+            <div>
+                <div class="doctor-name">Loading your appointed doctors...</div>
+                <div class="doctor-meta">Checking your saved appointments.</div>
+            </div>
+        </div>
+
+        <div class="list-section">
+            <div class="section-title">Cardiology</div>
+            <div class="doctor-list">
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Rohan Mehta</div>
+                        <div class="doctor-meta">MD, DM (Cardiology)</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Rohan+Mehta">Chat</a>
+                    </div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Asha Sen</div>
+                        <div class="doctor-meta">MBBS, MD (Cardiology), FACC</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Asha+Sen">Chat</a></div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Vikram Kapoor</div>
+                        <div class="doctor-meta">MBBS, MD, DNB (Cardiology)</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Vikram+Kapoor">Chat</a>
+                    </div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Nisha Lohia</div>
+                        <div class="doctor-meta">MBBS, MD (Cardiology), MRCP</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Nisha+Lohia">Chat</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="list-section">
+            <div class="section-title">Pediatrics</div>
+            <div class="doctor-list">
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Aarti Kapoor</div>
+                        <div class="doctor-meta">MBBS, MD (Pediatrics)</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Aarti+Kapoor">Chat</a>
+                    </div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Raghav Sharma</div>
+                        <div class="doctor-meta">MBBS, DCH</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Raghav+Sharma">Chat</a>
+                    </div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Priya Menon</div>
+                        <div class="doctor-meta">MBBS, MD (Pediatrics)</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Priya+Menon">Chat</a>
+                    </div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Suresh Nair</div>
+                        <div class="doctor-meta">MBBS, MD (Pediatrics)</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Suresh+Nair">Chat</a>
+                    </div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Geeta Kulkarni</div>
+                        <div class="doctor-meta">MBBS, MD (Pediatrics)</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Geeta+Kulkarni">Chat</a>
+                    </div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Leena Sood</div>
+                        <div class="doctor-meta">MBBS, DCH</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Leena+Sood">Chat</a></div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Bhavya Tandon</div>
+                        <div class="doctor-meta">MBBS, MD (Pediatrics)</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Bhavya+Tandon">Chat</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="list-section">
+            <div class="section-title">Therapy / Psychiatry</div>
+            <div class="doctor-list">
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Ritu Sinha</div>
+                        <div class="doctor-meta">MD (Psychiatry)</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Ritu+Sinha">Chat</a></div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Aman Khanna</div>
+                        <div class="doctor-meta">DPM (Child & Adolescent)</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Aman+Khanna">Chat</a>
+                    </div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Meera Sharma</div>
+                        <div class="doctor-meta">MPhil, PhD</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Meera+Sharma">Chat</a>
+                    </div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Pankaj Kumar</div>
+                        <div class="doctor-meta">MD (Psychiatry)</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Pankaj+Kumar">Chat</a>
+                    </div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Neha Luthra</div>
+                        <div class="doctor-meta">MPhil Clinical Psychology</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Neha+Luthra">Chat</a>
+                    </div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Vipul Rao</div>
+                        <div class="doctor-meta">MD (Psychiatry)</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Vipul+Rao">Chat</a></div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Rohan Joshi</div>
+                        <div class="doctor-meta">PhD Clinical Psychology</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Rohan+Joshi">Chat</a>
+                    </div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Sangeeta Singh</div>
+                        <div class="doctor-meta">MD (Psychiatry)</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Sangeeta+Singh">Chat</a>
+                    </div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Ritu Kapoor</div>
+                        <div class="doctor-meta">MPhil, DBT Certified</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Ritu+Kapoor">Chat</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="list-section">
+            <div class="section-title">Orthopedics</div>
+            <div class="doctor-list">
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Arjun Reddy</div>
+                        <div class="doctor-meta">MS Orth, DNB</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Arjun+Reddy">Chat</a>
+                    </div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Kavita Rao</div>
+                        <div class="doctor-meta">MS Orth, Sports Fellowship</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Kavita+Rao">Chat</a></div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Sanjay Gupta</div>
+                        <div class="doctor-meta">MS Orth, Spine Fellowship</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Sanjay+Gupta">Chat</a>
+                    </div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Leela Menon</div>
+                        <div class="doctor-meta">DNB, Pediatric Orthopedics</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Leela+Menon">Chat</a>
+                    </div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Mohit Verma</div>
+                        <div class="doctor-meta">MS Orth</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Mohit+Verma">Chat</a>
+                    </div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Priyanka Singh</div>
+                        <div class="doctor-meta">MS Orth, Hand Surgery Fellowship</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Priyanka+Singh">Chat</a>
+                    </div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Karan Iyer</div>
+                        <div class="doctor-meta">DNB Orthopedics</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Karan+Iyer">Chat</a></div>
+                </div>
+                <div class="doctor-item">
+                    <div>
+                        <div class="doctor-name">Dr. Nivedita Sharma</div>
+                        <div class="doctor-meta">MS Orth</div>
+                    </div>
+                    <div class="actions"><a class="small-btn chat" href="chat.html?doctor=Dr.+Nivedita+Sharma">Chat</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat modal markup + script -->
+    <div id="chatModal" class="chat-modal" role="dialog" aria-hidden="true">
+      <div class="chat-modal-content">
+        <div class="chat-modal-header">
+          <div id="chatModalTitle">Chat</div>
+          
+        </div>
+        <iframe id="chatModalIframe" class="chat-modal-iframe" src="about:blank"></iframe>
+      </div>
+    </div>
+    <script src="api.js"></script>
+    <script src="chat-modal.js"></script>
+    <script src="appointment-access.js"></script>
+    <script src="call.js"></script>
+    <script>
+        (function () {
+            const consultationMode = new URL(location.href).searchParams.get('mode');
+            if (consultationMode === 'appointments') {
+                const loading = document.getElementById('appointmentsLoading');
+                if (loading) loading.style.display = 'flex';
+                document.querySelectorAll('.list-section').forEach((section) => {
+                    section.hidden = true;
+                });
+                const heading = document.querySelector('.chat-header h2');
+                if (heading) heading.textContent = 'My Appointed Doctors';
+            }
+            const categoryAliases = {
+                Cardiology: ['cardiology', 'cardiologist'],
+                Pediatrics: ['pediatrics', 'pediatric', 'paediatrics', 'paediatric'],
+                Therapy: ['therapy', 'psychiatry', 'psychology', 'mental health'],
+                'Therapy / Psychiatry': ['therapy', 'psychiatry', 'psychology', 'mental health'],
+                Orthopedics: ['orthopedics', 'orthopaedics', 'orthopedic', 'orthopaedic']
+            };
+
+            function escapeHtml(value) {
+                return String(value || '')
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
+            function displayName(name) {
+                const value = String(name || '').trim();
+                return /^dr\.?\s/i.test(value) ? value : 'Dr. ' + value;
+            }
+
+            function getSection(specialty) {
+                const normalized = String(specialty || '').trim().toLowerCase();
+                const sections = [...document.querySelectorAll('.list-section')];
+
+                for (const section of sections) {
+                    const title = section.querySelector('.section-title');
+                    const category = title ? title.textContent.trim() : '';
+                    const aliases = categoryAliases[category] || [category];
+                    if (aliases.some((alias) =>
+                        normalized === alias.toLowerCase() || normalized.includes(alias.toLowerCase())
+                    )) {
+                        return section.querySelector('.doctor-list');
+                    }
+                }
+
+                return null;
+            }
+
+            function createDoctorItem(doctor) {
+                const item = document.createElement('div');
+                item.className = 'doctor-item registered-doctor-item';
+                const name = displayName(doctor.name);
+                item.innerHTML = `
+                    <div>
+                        <div class="doctor-name">${escapeHtml(name)}</div>
+                        <div class="doctor-meta">${escapeHtml(doctor.degree || 'Registered Medical Professional')}${doctor.location ? ' — ' + escapeHtml(doctor.location) : ''}</div>
+                    </div>
+                    <div class="actions">
+                        <button type="button" class="small-btn chat" data-appointment-chat="${encodeURIComponent(name)}" disabled>Chat</button>
+                        <button type="button" class="small-btn call" data-appointment-call="${encodeURIComponent(name)}" data-call-mode="video" disabled>Call</button>
+                    </div>
+                `;
+                return item;
+            }
+
+            async function loadRegisteredDoctors() {
+                if (!window.DockTalkAPI) return;
+
+                try {
+                    const doctors = await window.DockTalkAPI.getDoctors();
+                    const existingNames = new Set(
+                        [...document.querySelectorAll('.doctor-name')]
+                            .map((element) => element.textContent.trim().replace(/^Dr\.?\s*/i, '').toLowerCase())
+                    );
+
+                    const unmatchedGroups = new Map();
+
+                    doctors.forEach((doctor) => {
+                        const nameKey = String(doctor.name || '').trim().replace(/^Dr\.?\s*/i, '').toLowerCase();
+                        if (!nameKey || existingNames.has(nameKey)) return;
+                        existingNames.add(nameKey);
+
+                        const targetList = getSection(doctor.specialty);
+                        if (targetList) {
+                            targetList.appendChild(createDoctorItem(doctor));
+                        } else {
+                            const specialty = String(doctor.specialty || 'General Medicine').trim();
+                            if (!unmatchedGroups.has(specialty)) unmatchedGroups.set(specialty, []);
+                            unmatchedGroups.get(specialty).push(doctor);
+                        }
+                    });
+
+                    unmatchedGroups.forEach((group, specialty) => {
+                        const section = document.createElement('div');
+                        section.className = 'list-section';
+                        section.innerHTML = `<div class="section-title">${escapeHtml(specialty)}</div><div class="doctor-list"></div>`;
+                        section.querySelector('.doctor-list').append(...group.map(createDoctorItem));
+                        document.querySelector('.page').appendChild(section);
+                    });
+                } catch (error) {
+                    console.warn('Unable to load registered doctors.', error);
+                }
+            }
+
+            async function applyAppointmentAccess() {
+                if (!window.DockTalkAppointmentAccess) return;
+                const activeDoctors = await window.DockTalkAppointmentAccess.getActiveDoctors();
+                const appointments = await window.DockTalkAppointmentAccess.getAppointments();
+                const chatAppointments = appointments.filter((appointment) =>
+                    window.DockTalkAppointmentAccess.isChatAvailable(appointment)
+                );
+                const bookedDoctors = consultationMode === 'appointments'
+                    ? await window.DockTalkAppointmentAccess.getBookedDoctors()
+                    : null;
+
+                document.querySelectorAll('.doctor-item').forEach((item) => {
+                    const nameElement = item.querySelector('.doctor-name');
+                    if (!nameElement) return;
+                    const name = nameElement.textContent.trim();
+                    if (bookedDoctors && !bookedDoctors.has(
+                        window.DockTalkAppointmentAccess.normalizeName(name)
+                    )) {
+                        item.remove();
+                        return;
+                    }
+                    const active = activeDoctors.has(
+                        window.DockTalkAppointmentAccess.normalizeName(name)
+                    );
+
+                    item.querySelectorAll('.chat').forEach((chat) => {
+                        const appointment = chatAppointments.find((candidate) =>
+                            window.DockTalkAppointmentAccess.normalizeName(candidate.doctorName) ===
+                            window.DockTalkAppointmentAccess.normalizeName(name)
+                        );
+                        chat.setAttribute('aria-disabled', String(!active));
+                        chat.title = active
+                            ? 'Chat during your appointment time slot'
+                            : 'Available during your booked appointment time slot';
+                        if (chat.tagName === 'A') {
+                            chat.dataset.appointmentChat = encodeURIComponent(name);
+                        }
+                        if (chat.disabled !== undefined) chat.disabled = !active;
+                        if (appointment) chat.dataset.appointmentId = appointment.id;
+                    });
+
+                    item.querySelectorAll('[data-appointment-call]').forEach((call) => {
+                        call.disabled = !active;
+                        call.setAttribute('aria-disabled', String(!active));
+                        call.dataset.doctorName = name;
+                        call.title = active
+                            ? 'Call during your appointment time slot'
+                            : 'Available during your booked appointment time slot';
+                    });
+
+                    const actions = item.querySelector('.actions');
+                    if (actions) {
+                        window.DockTalkAppointmentAccess.addCallControl(actions, name, active);
+                    }
+                });
+
+                if (consultationMode === 'appointments') {
+                    document.querySelectorAll('.list-section').forEach((section) => {
+                        if (!section.querySelector('.doctor-item')) {
+                            section.remove();
+                        } else {
+                            section.hidden = false;
+                        }
+                    });
+                    const pageHeading = document.querySelector('.chat-header h2');
+                    if (pageHeading) pageHeading.textContent = 'My Appointed Doctors';
+                    if (!document.querySelector('.doctor-item')) {
+                        const page = document.querySelector('.page');
+                        const empty = document.createElement('div');
+                        empty.className = 'doctor-item';
+                        empty.innerHTML =
+                            '<div><div class="doctor-name">No appointed doctors</div><div class="doctor-meta">Book an appointment first to unlock Chat and Call.</div></div>';
+                        page.appendChild(empty);
+                    }
+                    const loading = document.getElementById('appointmentsLoading');
+                    if (loading) loading.remove();
+                }
+            }
+
+            document.addEventListener('click', function (event) {
+                const chat = event.target.closest('[data-appointment-chat], a.chat');
+                if (!chat) return;
+
+                const item = chat.closest('.doctor-item');
+                const name = item?.querySelector('.doctor-name')?.textContent?.trim();
+                const appointmentId = chat.dataset.appointmentId;
+                const active = chat.getAttribute('aria-disabled') !== 'true' &&
+                    chat.disabled !== true;
+                if (!active) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    alert('Chat and call become available at the booked appointment time and remain available for 1 hour.');
+                    return;
+                }
+
+                if (chat.tagName === 'A') return;
+                event.preventDefault();
+                const modal = document.getElementById('chatModal');
+                const iframe = document.getElementById('chatModalIframe');
+                if (modal && iframe) {
+                    iframe.src = 'chat.html?doctor=' + encodeURIComponent(name) +
+                        '&appointmentId=' + encodeURIComponent(appointmentId || '');
+                    document.getElementById('chatModalTitle').textContent = 'Chat with ' + name;
+                    modal.classList.add('active');
+                }
+            }, true);
+
+            loadRegisteredDoctors().then(async () => {
+                await applyAppointmentAccess();
+                setInterval(applyAppointmentAccess, 30000);
+                const requested = new URL(location.href).searchParams.get('specialty');
+                if (!requested) return;
+
+                const section = [...document.querySelectorAll('.list-section')].find((item) => {
+                    const title = item.querySelector('.section-title');
+                    return title && title.textContent.trim().toLowerCase() === requested.trim().toLowerCase();
+                });
+                if (section) {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    section.style.outline = '3px solid rgba(37, 99, 235, 0.18)';
+                    section.style.borderRadius = '12px';
+                }
+            });
+        })();
+    </script>
+    <script>
+        document.getElementById('doctorListBack').addEventListener('click', function () {
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'chat-back' }, '*');
+                return;
+            }
+            history.back();
+        });
+    </script>
+</body>
+
+</html>

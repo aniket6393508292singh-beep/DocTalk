@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Symptom Checker</title>
+  <link rel="stylesheet" href="symptom-checker.css">
+</head>
+<body>
+  <div class="symptom-container">
+    <header class="symptom-header">      <button type="button" class="btn secondary back-link" onclick="history.back()">← Go Back</button>      <h1>Symptom Checker</h1>
+      <p>Answer a few simple questions to get guidance on the next best step.</p>
+    </header>
+
+    <form id="symptomForm" class="tool-form">
+      <div class="form-group">
+        <label for="age">Age</label>
+        <input id="age" type="number" min="1" max="120" placeholder="Enter your age" required>
+      </div>
+
+      <div class="form-group">
+        <label for="gender">Gender</label>
+        <select id="gender" required>
+          <option value="">Select gender</option>
+          <option value="female">Female</option>
+          <option value="male">Male</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="symptoms">Primary Symptoms</label>
+        <textarea id="symptoms" rows="5" placeholder="Describe your main symptoms" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Urgent signs</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" value="chest_pain"> Chest pain</label>
+          <label><input type="checkbox" value="difficulty_breathing"> Difficulty breathing</label>
+          <label><input type="checkbox" value="severe_headache"> Severe headache</label>
+          <label><input type="checkbox" value="high_fever"> High fever</label>
+        </div>
+      </div>
+
+      <button type="submit" class="btn secondary" style="margin-top: 16px;">Get Guidance</button>
+    </form>
+
+    <div id="result" class="tool-result" style="margin-top: 24px; display: none;"></div>
+  </div>
+
+  <script>
+    document.getElementById('symptomForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const age = document.getElementById('age').value;
+      const gender = document.getElementById('gender').value;
+      const symptoms = document.getElementById('symptoms').value.trim();
+      const urgent = Array.from(document.querySelectorAll('#symptomForm input[type=checkbox]:checked')).map(cb => cb.value);
+      const result = document.getElementById('result');
+
+      let message = 'Based on your input, here is a general recommendation:';
+      if (urgent.length > 0) {
+        message = 'Your symptoms indicate urgent care may be needed. Please contact emergency services or visit the nearest hospital immediately.';
+      } else if (!symptoms) {
+        message = 'Please describe your main symptoms so we can provide the best recommendation.';
+      } else {
+        message = 'Your symptoms appear non-urgent. Consider monitoring your condition, staying hydrated, and seeking a consultation if symptoms worsen.';
+      }
+
+      result.style.display = 'block';
+      result.innerHTML = '<h3>Symptom Checker Result</h3><p>' + message + '</p>';
+    });
+  </script>
+</body>
+</html>

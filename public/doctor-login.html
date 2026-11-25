@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Login - DockTalk</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="doctor.css">
+</head>
+<body class="doctor-login-page">
+    <main class="doctor-login-shell">
+        <section class="doctor-login-card" aria-labelledby="doctorLoginTitle">
+            <a class="doctor-brand" href="MAIN.html"><span>🩺</span> DockTalk</a>
+            <p class="doctor-eyebrow">Doctor portal</p>
+            <h1 id="doctorLoginTitle">Welcome back, Doctor</h1>
+            <p class="doctor-login-copy">Sign in to manage appointments, patients, and secure conversations.</p>
+
+            <form id="doctorLoginForm" class="doctor-login-form">
+                <label>Email address
+                    <input type="email" name="email" autocomplete="email" required>
+                </label>
+                <label>Password
+                    <input type="password" name="password" autocomplete="current-password" required>
+                </label>
+                <button type="submit" class="doctor-primary-button" id="doctorLoginButton">Sign in to Dashboard</button>
+                <p id="doctorLoginStatus" class="doctor-form-status" role="status"></p>
+            </form>
+
+            <p class="doctor-login-footer">
+                New to DockTalk?
+                <a href="doctor-registration.html">Register as a doctor</a>
+            </p>
+        </section>
+    </main>
+
+    <script src="api.js"></script>
+    <script>
+        const api = window.DockTalkAPI;
+        const form = document.getElementById('doctorLoginForm');
+        const status = document.getElementById('doctorLoginStatus');
+        const button = document.getElementById('doctorLoginButton');
+
+        const currentUser = api.getCurrentUser();
+        if (currentUser && currentUser.role === 'doctor') {
+            window.location.replace('doctor-dashboard.html');
+        }
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const data = new FormData(form);
+            button.disabled = true;
+            button.textContent = 'Signing in...';
+            status.textContent = '';
+
+            try {
+                const result = await api.login({
+                    email: data.get('email'),
+                    password: data.get('password')
+                });
+
+                if (result.user.role !== 'doctor') {
+                    api.clearSession();
+                    status.textContent = 'This account is registered as a patient. Use the patient sign-in option.';
+                    status.className = 'doctor-form-status error';
+                    return;
+                }
+
+                api.setSession(result.user, result.token);
+                status.textContent = 'Login successful. Opening your dashboard...';
+                status.className = 'doctor-form-status success';
+                window.location.replace('doctor-dashboard.html');
+            } catch (error) {
+                status.textContent = error.message;
+                status.className = 'doctor-form-status error';
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Sign in to Dashboard';
+            }
+        });
+    </script>
+</body>
+</html>

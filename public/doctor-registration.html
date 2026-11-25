@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Registration - DockTalk</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="doctor.css">
+</head>
+<body class="doctor-registration-page">
+    <main class="doctor-registration-shell">
+        <section class="doctor-registration-intro">
+            <a class="doctor-brand" href="MAIN.html"><span>🩺</span> DockTalk</a>
+            <p class="doctor-eyebrow">Join our medical network</p>
+            <h1>Register as a Doctor</h1>
+            <p>Create your professional profile, receive patient appointments, and manage secure patient conversations.</p>
+            <ul class="doctor-benefits">
+                <li><span>✓</span> Online appointment management</li>
+                <li><span>✓</span> Patient chat and contact details</li>
+                <li><span>✓</span> Flexible consultation modes</li>
+            </ul>
+        </section>
+
+        <section class="doctor-registration-card" aria-labelledby="registrationTitle">
+            <div class="doctor-card-header">
+                <div>
+                    <p class="doctor-eyebrow">Professional account</p>
+                    <h2 id="registrationTitle">Create doctor account</h2>
+                </div>
+                <a href="MAIN.html" class="doctor-back">← Back</a>
+            </div>
+            <div class="doctor-login-prompt">
+                Already registered as a doctor?
+                <a href="doctor-login.html">Sign in to your dashboard</a>
+            </div>
+
+            <form id="doctorRegistrationForm" class="doctor-registration-form">
+                <fieldset>
+                    <legend>Personal details</legend>
+                    <div class="doctor-form-grid">
+                        <label>Full name *
+                            <input type="text" name="name" autocomplete="name" required>
+                        </label>
+                        <label>Email address *
+                            <input type="email" name="email" autocomplete="email" required>
+                        </label>
+                        <label>Phone number *
+                            <input type="tel" name="phone" autocomplete="tel" required>
+                        </label>
+                        <label>License number *
+                            <input type="text" name="licenseNumber" required>
+                        </label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Professional details</legend>
+                    <div class="doctor-form-grid">
+                        <label>Specialty *
+                            <select name="specialty" required>
+                                <option value="">Select specialty</option>
+                                <option>Cardiology</option>
+                                <option>Pediatrics</option>
+                                <option>Therapy</option>
+                                <option>Orthopedics</option>
+                                <option>General Medicine</option>
+                                <option>Neurology</option>
+                                <option>Dermatology</option>
+                                <option>Gynecology</option>
+                                <option>ENT</option>
+                                <option>Ophthalmology</option>
+                                <option>Dentistry</option>
+                                <option>Nutrition</option>
+                            </select>
+                        </label>
+                        <label>Degree / Qualification *
+                            <input type="text" name="degree" placeholder="e.g. MBBS, MD" required>
+                        </label>
+                        <label>Experience (years)
+                            <input type="number" name="experience" min="0" max="60" value="0">
+                        </label>
+                        <label>Consultation fee (₹)
+                            <input type="number" name="fee" min="0" step="1" value="499">
+                        </label>
+                        <label>Clinic / Location
+                            <input type="text" name="location" placeholder="City or clinic address">
+                        </label>
+                        <label>Availability
+                            <input type="text" name="availability" placeholder="Mon-Sat, 9 AM - 6 PM">
+                        </label>
+                    </div>
+                    <label class="doctor-full-field">Consultation modes
+                        <span class="doctor-checkboxes">
+                            <label><input type="checkbox" name="consultationModes" value="video" checked> Video</label>
+                            <label><input type="checkbox" name="consultationModes" value="audio"> Audio</label>
+                            <label><input type="checkbox" name="consultationModes" value="in-person"> In-person</label>
+                        </span>
+                    </label>
+                    <label class="doctor-full-field">Professional bio
+                        <textarea name="bio" rows="4" placeholder="Briefly describe your experience and areas of expertise"></textarea>
+                    </label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Account security</legend>
+                    <div class="doctor-form-grid">
+                        <label>Password *
+                            <input type="password" name="password" minlength="6" autocomplete="new-password" required>
+                        </label>
+                        <label>Confirm password *
+                            <input type="password" name="confirmPassword" minlength="6" autocomplete="new-password" required>
+                        </label>
+                    </div>
+                </fieldset>
+
+                <label class="doctor-consent">
+                    <input type="checkbox" name="consent" required>
+                    I confirm that the information provided is accurate and belongs to a licensed medical professional.
+                </label>
+
+                <button type="submit" class="doctor-primary-button" id="doctorRegisterButton">Create Doctor Account</button>
+                <p class="doctor-form-status" id="doctorRegistrationStatus" role="status"></p>
+            </form>
+        </section>
+    </main>
+
+    <script src="api.js"></script>
+    <script>
+        const existingUser = window.DockTalkAPI && window.DockTalkAPI.getCurrentUser();
+        if (existingUser && existingUser.role === 'doctor') {
+            window.location.replace('doctor-dashboard.html');
+        }
+
+        const form = document.getElementById('doctorRegistrationForm');
+        const status = document.getElementById('doctorRegistrationStatus');
+        const submitButton = document.getElementById('doctorRegisterButton');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const data = new FormData(form);
+            const password = data.get('password');
+            const confirmPassword = data.get('confirmPassword');
+
+            if (password !== confirmPassword) {
+                status.textContent = 'Passwords do not match.';
+                status.className = 'doctor-form-status error';
+                return;
+            }
+
+            const payload = {
+                name: data.get('name'),
+                email: data.get('email'),
+                phone: data.get('phone'),
+                password,
+                licenseNumber: data.get('licenseNumber'),
+                specialty: data.get('specialty'),
+                degree: data.get('degree'),
+                experience: data.get('experience'),
+                fee: data.get('fee'),
+                location: data.get('location'),
+                availability: data.get('availability'),
+                bio: data.get('bio'),
+                consultationModes: data.getAll('consultationModes')
+            };
+
+            submitButton.disabled = true;
+            submitButton.textContent = 'Creating account...';
+            status.textContent = '';
+
+            try {
+                const result = await window.DockTalkAPI.registerDoctor(payload);
+                window.DockTalkAPI.setSession(result.user, result.token);
+                status.textContent = 'Doctor account created. Redirecting to your dashboard...';
+                status.className = 'doctor-form-status success';
+                setTimeout(() => { window.location.href = 'doctor-dashboard.html'; }, 700);
+            } catch (error) {
+                status.textContent = error.message;
+                status.className = 'doctor-form-status error';
+                submitButton.disabled = false;
+                submitButton.textContent = 'Create Doctor Account';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #e8edf1;
+    color: #0f172a;
+}
+
+.bmi-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 20px;
+      
+
+     
+}
+
+.bmi-header {
+    margin-bottom: 22px;
+}
+
+.bmi-header h1 {
+    margin: 8px 0 6px;
+    font-size: 2rem;
+}
+
+.bmi-header p {
+    margin: 0;
+    color: #475569;
+}
+
+.back-link {
+    background: white;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    padding: 8px 12px;
+    border-radius: 10px;
+}
+
+.bmi-card {
+    background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
+    padding: 32px;
+    border-radius: 28px;
+    box-shadow: 0 28px 80px rgba(15, 23, 42, 0.108);
+    border: 2px solid #c7d2fe;
+}
+
+.bmi-form .field {
+    margin-bottom: 16px;
+}
+
+.bmi-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.bmi-form input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #e6eef8;
+    background: #fbfdff;
+    font-size: 1rem;
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+}
+
+.btn.primary {
+    background: linear-gradient(90deg, #2563eb, #4f46e5);
+    color: white;
+}
+
+.btn.secondary {
+    background: #eef2ff;
+    color: #1d4ed8;
+}
+
+.bmi-result {
+    margin-top: 18px;
+    padding: 18px;
+    border-radius: 24px;
+    background: white;
+    box-shadow: 0 24px 44px rgba(15, 23, 42, 0.08);
+}
+
+.bmi-result h3 {
+    margin: 0 0 8px;
+}
+
+.bmi-result .category {
+    margin: 0;
+    color: #475569;
+}
+
+.suggestions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 14px;
+}
+
+.suggestion-section h4 {
+    margin: 0 0 8px;
+    font-size: 1rem;
+    color: #0f172a;
+}
+
+.suggestion-section ul {
+    margin: 0;
+    padding-left: 18px;
+    color: #374151;
+}
+
+.suggestion-section li {
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+.suggestion-section p {
+    margin: 0;
+    color: #374151;
+    line-height: 1.6;
+}
+
+@media (max-width:640px) {
+    .suggestions {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Unit selector styles */
+.unit-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.unit-row input {
+    flex: 1;
+}
+
+.unit-select {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #e6eef8;
+    background: #fbfdff;
+    font-size: 1rem;
+}
+
+.helper {
+    display: block;
+    margin-top: 8px;
+    color: #6b7280;
+    font-size: 0.92rem;
+}
+
+@media (max-width:640px) {
+    .unit-row {
+        flex-direction: column;
+    }
+
+    .unit-select {
+        width: 100%;
+    }
+}
+
+/* BMI chart styles */
+.bmi-chart {
+    margin: 18px 0 12px;
+}
+
+.chart-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #475569;
+    margin-bottom: 8px;
+}
+
+.chart-labels span {
+    text-align: center;
+    display: block;
+    width: 24%;
+}
+
+.chart-bar {
+    position: relative;
+    height: 18px;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+}
+
+.chart-bar .segment {
+    height: 100%;
+}
+
+.segment.underweight {
+    background: #fde68a;
+}
+
+.segment.normal {
+    background: #bbf7d0;
+}
+
+.segment.overweight {
+    background: #fcd34d;
+}
+
+.segment.obesity {
+    background: #fca5a5;
+}
+
+.marker {
+    position: absolute;
+    top: -14px;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    transform: translateX(-50%);
+}
+
+.marker .pin {
+    color: #111827;
+    font-size: 18px;
+}
+
+.marker .value {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 6px 8px;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
+    font-weight: 700;
+}
+
+@media (max-width:640px) {
+    .actions {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+/* Ensure tool action buttons in BMI page stay inside the card (not fixed) */
+.bmi-card .tool-actions {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+@media (max-width:640px) {
+    .bmi-card .tool-actions { flex-direction: column; align-items: stretch; }
+}

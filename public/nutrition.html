@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Nutrition & Diet Tips</title>
+  <link rel="stylesheet" href="health-tools.css">
+</head>
+<body>
+  <div class="tools-container">
+    <header class="tools-header">
+      <button type="button" class="btn secondary back-link" onclick="history.back()">← Go Back</button>
+      <h1>Nutrition & Diet Tips</h1>
+      <p>Basic, evidence-aligned advice for everyday healthy eating.</p>
+    </header>
+
+    <section class="tool-card">
+      <h2>Core Tips</h2>
+      <ul>
+        <li>Eat a variety of vegetables and fruits — aim for color and seasonality.</li>
+        <li>Prioritize whole grains and minimally processed foods.</li>
+        <li>Include lean protein at meals (legumes, fish, poultry, tofu).</li>
+        <li>Prefer healthy fats (olive oil, nuts, seeds, avocado) in moderation.</li>
+        <li>Stay hydrated — water is best. Limit sugary drinks.</li>
+      </ul>
+
+      <h3>Simple Meal Ideas</h3>
+      <ul>
+        <li>Overnight oats with fruit and a sprinkle of nuts.</li>
+        <li>Mixed salad with chickpeas, whole-grain bread, and olive oil.</li>
+        <li>Grilled fish with steamed vegetables and brown rice.</li>
+      </ul>
+
+      <h3>When to seek personalised advice</h3>
+      <p>If you have chronic conditions (diabetes, kidney disease, severe allergies) consult a registered dietitian or your doctor before major diet changes.</p>
+    </section>
+    <section class="tool-card" style="margin-top:18px;">
+      <h2>Quick Snack Suggestion</h2>
+      <p>Click for a healthy snack suggestion based on a quick preference.</p>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:8px;">
+        <select id="snackPref" class="unit-select">
+          <option value="any">Any</option>
+          <option value="sweet">Sweet</option>
+          <option value="savory">Savory</option>
+          <option value="high-protein">High protein</option>
+        </select>
+        <button id="suggestSnack" class="btn primary">Suggest Snack</button>
+      </div>
+      <p id="snackResult" style="margin-top:12px;font-weight:700;color:#0f172a"></p>
+
+      <div class="tool-actions" style="margin-top:10px;">
+        <a href="chat.html?doctor=Dietitian&hideClose=1" class="btn primary chat" data-doctor="Dietitian" data-hide-close="true">Chat with Dietitian</a>
+        <a href="#" class="btn secondary call">Call Nutritionist</a>
+      </div>
+    </section>
+    <!-- Local Call modal for this page -->
+    <div id="callModalLocal" class="modal" role="dialog" aria-hidden="true" style="display:none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Call Nutritionist</h2>
+          <button class="modal-close" aria-label="Close">✕</button>
+        </div>
+        <div class="modal-body">
+          <p>Choose how you'd like to connect with a nutritionist.</p>
+          <div class="modal-actions">
+            <button type="button" class="btn secondary" id="audioCall">Audio Call</button>
+            <button type="button" class="btn secondary" id="videoCall">Video Call</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+<script>
+  const snacks = {
+    any: ['Apple with peanut butter', 'Greek yogurt with berries', 'Handful of mixed nuts', 'Carrot sticks with hummus'],
+    sweet: ['Yogurt with honey and walnuts', 'Baked apple with cinnamon'],
+    savory: ['Whole-grain toast with avocado', 'Hummus and cucumber slices'],
+    'high-protein': ['Cottage cheese and fruit', 'Boiled egg and whole-grain crackers']
+  };
+  document.getElementById('suggestSnack').addEventListener('click', function(){
+    const pref = document.getElementById('snackPref').value || 'any';
+    const list = snacks[pref] || snacks.any;
+    const choice = list[Math.floor(Math.random()*list.length)];
+    document.getElementById('snackResult').textContent = choice;
+  });
+
+  // rely on global chat modal and call modal if present; do not inject local modals
+  // Call modal handling for this page
+  document.addEventListener('click', function(e){
+    const callLink = e.target.closest && e.target.closest('a.call');
+    const closeButton = e.target.closest && e.target.closest('.modal-close');
+    const overlay = e.target.closest && e.target.closest('.modal');
+    if (callLink) { e.preventDefault(); document.getElementById('callModalLocal').style.display = 'block'; }
+    if (closeButton) { e.preventDefault(); closeButton.closest('.modal').style.display = 'none'; }
+    if (overlay && e.target === overlay) overlay.style.display = 'none';
+  });
+  document.getElementById('audioCall').addEventListener('click', function(){ alert('Starting audio call (demo).'); document.getElementById('callModalLocal').style.display='none'; });
+  document.getElementById('videoCall').addEventListener('click', function(){ alert('Starting video call (demo).'); document.getElementById('callModalLocal').style.display='none'; });
+</script>

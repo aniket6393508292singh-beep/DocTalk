@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Pharmacy</title>
+  <link rel="stylesheet" href="health-tools.css">
+  <script src="api.js" defer></script>
+  <script src="cart.js" defer></script>
+</head>
+<body>
+  <div class="tools-container">
+    <div class="pharmacy-layout">
+      <div class="pharmacy-main">
+    <header class="tools-header">
+      <button type="button" class="btn secondary back-link" onclick="history.back()">← Go Back</button>
+      <h1>Pharmacy</h1>
+      <p>Order medicines, refills and health essentials for quick delivery.</p>
+    </header>
+
+    <section class="tool-card">
+      <h2>Featured Pharmacy Medicines</h2>
+      <p>Select a medicine card to add to your order quickly.</p>
+      <div class="medicine-grid">
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="pain-relief" checked>
+          <div class="medicine-card-body">
+            <strong>Pain Relief</strong>
+            <span>Ibuprofen 200mg • 20 tablets</span>
+            <small>Fast-acting relief for aches and fever.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="allergy">
+          <div class="medicine-card-body">
+            <strong>Allergy Relief</strong>
+            <span>Loratadine 10mg • 10 tablets</span>
+            <small>Non-drowsy support for seasonal allergies.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="cold-cough">
+          <div class="medicine-card-body">
+            <strong>Cold & Cough</strong>
+            <span>Multi-symptom syrup • 100ml</span>
+            <small>Helps ease congestion and sore throat.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="vitamins">
+          <div class="medicine-card-body">
+            <strong>Daily Vitamins</strong>
+            <span>Multivitamin • 30 tablets</span>
+            <small>Daily support for energy and immunity.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="antacid">
+          <div class="medicine-card-body">
+            <strong>Antacid</strong>
+            <span>Omeprazole 20mg • 14 capsules</span>
+            <small>Helps reduce heartburn and acid reflux.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="sleep-aid">
+          <div class="medicine-card-body">
+            <strong>Sleep Aid</strong>
+            <span>Melatonin 5mg • 30 tablets</span>
+            <small>Supports restful sleep naturally.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="antibiotic">
+          <div class="medicine-card-body">
+            <strong>Antibiotic</strong>
+            <span>Amoxicillin 500mg • 21 capsules</span>
+            <small>Prescribed for bacterial infections.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="anti-inflammatory">
+          <div class="medicine-card-body">
+            <strong>Anti-inflammatory</strong>
+            <span>Naproxen 250mg • 20 tablets</span>
+            <small>Reduces inflammation and joint pain.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="wound-care">
+          <div class="medicine-card-body">
+            <strong>Wound Care</strong>
+            <span>Antibiotic ointment • 15g</span>
+            <small>Helps protect cuts and speed healing.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="immune-support">
+          <div class="medicine-card-body">
+            <strong>Immune Support</strong>
+            <span>Zinc + Vitamin C • 30 tablets</span>
+            <small>Supports immune defenses and recovery.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="antihistamine">
+          <div class="medicine-card-body">
+            <strong>Antihistamine</strong>
+            <span>Cetirizine 10mg • 10 tablets</span>
+            <small>Relieves itching and sneezing.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="anti-diarrheal">
+          <div class="medicine-card-body">
+            <strong>Anti-diarrheal</strong>
+            <span>Loperamide 2mg • 12 tablets</span>
+            <small>Stops diarrhea and soothes digestion.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="anti-nausea">
+          <div class="medicine-card-body">
+            <strong>Anti-nausea</strong>
+            <span>Ondansetron 4mg • 10 tablets</span>
+            <small>Helps calm nausea and vomiting.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="cholesterol">
+          <div class="medicine-card-body">
+            <strong>Cholesterol</strong>
+            <span>Atorvastatin 10mg • 30 tablets</span>
+            <small>Supports healthy cholesterol levels.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="blood-pressure">
+          <div class="medicine-card-body">
+            <strong>Blood Pressure</strong>
+            <span>Amlodipine 5mg • 30 tablets</span>
+            <small>Helps maintain healthy blood pressure.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="diabetes">
+          <div class="medicine-card-body">
+            <strong>Diabetes</strong>
+            <span>Metformin 500mg • 60 tablets</span>
+            <small>Helps manage blood glucose levels.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="thyroid">
+          <div class="medicine-card-body">
+            <strong>Thyroid</strong>
+            <span>Levothyroxine 50mcg • 30 tablets</span>
+            <small>Supports normal thyroid function.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="migraine">
+          <div class="medicine-card-body">
+            <strong>Migraine</strong>
+            <span>Sumatriptan 50mg • 6 tablets</span>
+            <small>Fast relief for migraine attacks.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="asthma">
+          <div class="medicine-card-body">
+            <strong>Asthma</strong>
+            <span>Albuterol inhaler • 1 unit</span>
+            <small>Quick relief for wheezing and shortness of breath.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="heart-health">
+          <div class="medicine-card-body">
+            <strong>Heart Health</strong>
+            <span>Aspirin 81mg • 30 tablets</span>
+            <small>Daily support for cardiovascular care.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="probiotic">
+          <div class="medicine-card-body">
+            <strong>Probiotic</strong>
+            <span>Lactobacillus • 30 capsules</span>
+            <small>Supports gut health and digestion.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="skin-care">
+          <div class="medicine-card-body">
+            <strong>Skin Care</strong>
+            <span>Hydrocortisone cream • 15g</span>
+            <small>Relieves itching and irritation.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="eye-care">
+          <div class="medicine-card-body">
+            <strong>Eye Care</strong>
+            <span>Artificial tears • 10ml</span>
+            <small>Soothes dryness and irritation.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="dental">
+          <div class="medicine-card-body">
+            <strong>Dental Care</strong>
+            <span>Oral pain relief gel • 10g</span>
+            <small>Helps with toothache and gum discomfort.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="cold-relief">
+          <div class="medicine-card-body">
+            <strong>Cold Relief</strong>
+            <span>Decongestant tablets • 12 count</span>
+            <small>Relieves nasal congestion and pressure.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="nasal-spray">
+          <div class="medicine-card-body">
+            <strong>Nasal Spray</strong>
+            <span>Fluticasone • 120 sprays</span>
+            <small>Reduces allergy congestion and inflammation.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="joint-care">
+          <div class="medicine-card-body">
+            <strong>Joint Care</strong>
+            <span>Glucosamine • 60 capsules</span>
+            <small>Supports joint comfort and mobility.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="oral-care">
+          <div class="medicine-card-body">
+            <strong>Oral Care</strong>
+            <span>Fluoride toothpaste • 100ml</span>
+            <small>Supports cavity prevention and enamel strength.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="sleep-support">
+          <div class="medicine-card-body">
+            <strong>Sleep Support</strong>
+            <span>Valerian Root • 30 capsules</span>
+            <small>Gentle herbal relief for better sleep.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="vitamin-d">
+          <div class="medicine-card-body">
+            <strong>Vitamin D</strong>
+            <span>2000 IU • 60 softgels</span>
+            <small>Supports bone health and immune function.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="pediatric">
+          <div class="medicine-card-body">
+            <strong>Pediatric Care</strong>
+            <span>Children's Acetaminophen • 120ml</span>
+            <small>Gentle fever relief for kids.</small>
+          </div>
+        </label>
+
+        <label class="medicine-card">
+          <input type="radio" name="medicine" value="prenatal">
+          <div class="medicine-card-body">
+            <strong>Prenatal</strong>
+            <span>Folic Acid 400mcg • 30 tablets</span>
+            <small>Supports pregnancy health and fetal development.</small>
+          </div>
+        </label>
+      </div>
+
+      <div class="tool-actions" style="margin-top:18px;">
+        <button class="btn primary" type="button" id="orderNow">Add to Order</button>
+        <a href="#" class="btn secondary call">Call Pharmacy</a>
+      </div>
+
+      <div id="orderSummary" class="tool-result" style="display:none; margin-top:24px;">
+        <h3>Selected medicine</h3>
+        <p id="selectedMedicine">Your chosen item will appear here.</p>
+      </div>
+    </section>
+
+    <section class="tool-card" style="margin-top:18px;">
+      <h2>Test Kits</h2>
+      <p>Add home test kits alongside your medicines for a complete order.</p>
+      <div class="testkit-grid">
+        <div class="testkit-card">
+          <strong>Blood Glucose Test Kit</strong>
+          <span>₹450</span>
+          <button class="btn secondary add-testkit" type="button" data-name="Blood Glucose Test Kit" data-price="450">Add to cart</button>
+        </div>
+        <div class="testkit-card">
+          <strong>COVID-19 Rapid Test Kit</strong>
+          <span>₹599</span>
+          <button class="btn secondary add-testkit" type="button" data-name="COVID-19 Rapid Test Kit" data-price="599">Add to cart</button>
+        </div>
+        <div class="testkit-card">
+          <strong>Thyroid Test Kit</strong>
+          <span>₹799</span>
+          <button class="btn secondary add-testkit" type="button" data-name="Thyroid Test Kit" data-price="799">Add to cart</button>
+        </div>
+        <div class="testkit-card">
+          <strong>Vitamin D Test Kit</strong>
+          <span>₹699</span>
+          <button class="btn secondary add-testkit" type="button" data-name="Vitamin D Test Kit" data-price="699">Add to cart</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="tool-card" style="margin-top:18px;">
+      <h2>Quick care essentials</h2>
+      <p>Need medical supplies or supplements fast? We deliver trusted brands and pharmacy essentials to your door.</p>
+    </section>
+      </div>
+
+      <!-- Cart moved to global navbar -->
+    </div>
+  </div>
+
+  <div id="callModalLocal" class="modal" role="dialog" aria-hidden="true" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Call Pharmacy</h2>
+        <button class="modal-close" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>Speak with our pharmacy team for medicine ordering, refills, and delivery support.</p>
+        <div class="modal-actions">
+          <button type="button" class="btn secondary" id="audioCall">Audio Call</button>
+          <button type="button" class="btn secondary" id="videoCall">Video Call</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const medicineDetails = {
+      'pain-relief': { label: 'Pain Relief — Ibuprofen 200mg (20 tablets)', price: 180 },
+      'allergy': { label: 'Allergy Relief — Loratadine 10mg (10 tablets)', price: 140 },
+      'cold-cough': { label: 'Cold & Cough — Multi-symptom syrup 100ml', price: 220 },
+      'vitamins': { label: 'Daily Vitamins — Multivitamin 30 tablets', price: 260 },
+      'antacid': { label: 'Antacid — Omeprazole 20mg (14 capsules)', price: 210 },
+      'sleep-aid': { label: 'Sleep Aid — Melatonin 5mg (30 tablets)', price: 230 },
+      'antibiotic': { label: 'Antibiotic — Amoxicillin 500mg (21 capsules)', price: 320 },
+      'anti-inflammatory': { label: 'Anti-inflammatory — Naproxen 250mg (20 tablets)', price: 250 },
+      'wound-care': { label: 'Wound Care — Antibiotic ointment (15g)', price: 170 },
+      'immune-support': { label: 'Immune Support — Zinc + Vitamin C (30 tablets)', price: 240 },
+      'antihistamine': { label: 'Antihistamine — Cetirizine 10mg (10 tablets)', price: 160 },
+      'anti-diarrheal': { label: 'Anti-diarrheal — Loperamide 2mg (12 tablets)', price: 150 },
+      'anti-nausea': { label: 'Anti-nausea — Ondansetron 4mg (10 tablets)', price: 200 },
+      'cholesterol': { label: 'Cholesterol — Atorvastatin 10mg (30 tablets)', price: 280 },
+      'blood-pressure': { label: 'Blood Pressure — Amlodipine 5mg (30 tablets)', price: 190 },
+      'diabetes': { label: 'Diabetes — Metformin 500mg (60 tablets)', price: 175 },
+      'thyroid': { label: 'Thyroid — Levothyroxine 50mcg (30 tablets)', price: 210 },
+      'migraine': { label: 'Migraine — Sumatriptan 50mg (6 tablets)', price: 260 },
+      'asthma': { label: 'Asthma — Albuterol inhaler (1 unit)', price: 330 },
+      'heart-health': { label: 'Heart Health — Aspirin 81mg (30 tablets)', price: 120 },
+      'probiotic': { label: 'Probiotic — Lactobacillus (30 capsules)', price: 190 },
+      'skin-care': { label: 'Skin Care — Hydrocortisone cream (15g)', price: 140 },
+      'eye-care': { label: 'Eye Care — Artificial tears (10ml)', price: 160 },
+      'dental': { label: 'Dental Care — Oral pain relief gel (10g)', price: 130 },
+      'cold-relief': { label: 'Cold Relief — Decongestant tablets (12 count)', price: 155 },
+      'nasal-spray': { label: 'Nasal Spray — Fluticasone (120 sprays)', price: 290 },
+      'joint-care': { label: 'Joint Care — Glucosamine (60 capsules)', price: 240 },
+      'oral-care': { label: 'Oral Care — Fluoride toothpaste (100ml)', price: 110 },
+      'sleep-support': { label: 'Sleep Support — Valerian Root (30 capsules)', price: 180 },
+      'vitamin-d': { label: 'Vitamin D — 2000 IU (60 softgels)', price: 260 },
+      'pediatric': { label: 'Pediatric Care — Children\'s Acetaminophen (120ml)', price: 200 },
+      'prenatal': { label: 'Prenatal — Folic Acid 400mcg (30 tablets)', price: 220 }
+    };
+
+    // Call modal and page interactions — use global addToCart()
+    document.addEventListener('click', function(e) {
+      const callLink = e.target.closest && e.target.closest('a.call');
+      const closeButton = e.target.closest && e.target.closest('.modal-close');
+      const overlay = e.target.closest && e.target.closest('.modal');
+
+      if (callLink) { e.preventDefault(); document.getElementById('callModalLocal').style.display = 'block'; }
+      if (closeButton) { e.preventDefault(); closeButton.closest('.modal').style.display = 'none'; }
+      if (overlay && e.target === overlay) overlay.style.display = 'none';
+    });
+
+    document.getElementById('audioCall').addEventListener('click', function(){ alert('Calling pharmacy (demo).'); document.getElementById('callModalLocal').style.display='none'; });
+    document.getElementById('videoCall').addEventListener('click', function(){ alert('Calling pharmacy (demo).'); document.getElementById('callModalLocal').style.display='none'; });
+
+    document.getElementById('orderNow').addEventListener('click', function(){
+      const selected = document.querySelector('input[name="medicine"]:checked').value;
+      const medicine = medicineDetails[selected];
+      if (!medicine) return;
+      if (window.addToCart) window.addToCart(medicine.label, medicine.price, 'Medicine');
+      document.getElementById('selectedMedicine').textContent = medicine.label + ' added to the cart.';
+      document.getElementById('orderSummary').style.display = 'block';
+      alert(medicine.label + ' added to your cart.');
+    });
+
+    document.querySelectorAll('.add-testkit').forEach((button) => {
+      button.addEventListener('click', function () {
+        const name = this.getAttribute('data-name');
+        const price = Number(this.getAttribute('data-price'));
+        if (window.addToCart) window.addToCart(name, price, 'Test Kit');
+        alert(name + ' added to your cart.');
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DockTalk - Online Doctor Consultation</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="chat.css">
+    <link rel="stylesheet" href="call.css">
+</head>
+
+<body>
+
+    <!-- Top Utility Bar -->
+    <div class="top-bar">
+        <div class="top-bar-container">
+            <span>📞 24/7 Emergency Medical Helpline: 1800-DOCK-TALK</span>
+            <div class="top-bar-links">
+                <a href="#">Download App</a>
+                <a href="doctor-registration.html">Doctor Registration</a>
+                <a href="doctor-login.html">Doctor Login</a>
+                <a href="#">Help & Support</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+
+            <!-- Logo -->
+            <a href="#" class="nav-logo">
+                <span class="icon">🩺</span> Dock<span class="brand-dark">Talk</span>
+            </a>
+            <p class="nav-subtitle">Telemedicine Management Platform</p>
+
+            <!-- Desktop Navigation Links -->
+            <div class="nav-links"></div>
+
+            <!-- Right Actions: Wallet & Login -->
+            <div class="nav-actions">
+                <!-- Cart (global) -->
+                <button id="cartToggle" class="cart-toggle" aria-label="Open cart">
+                    🛒 <span id="navCartCount">0</span>
+                </button>
+                <button type="button" class="patient-notification-toggle" data-patient-notifications-toggle
+                    aria-label="Chat notifications">
+                    <span aria-hidden="true">🔔</span>
+                    <span class="patient-notification-count" data-patient-notification-count hidden>0</span>
+                </button>
+                <div class="wallet-badge">
+                    <span>💰</span>
+                    <span style="font-size: 11px; color: var(--text-light); margin-left: 4px;">Balance:</span>
+                    <span class="amount">₹0</span>
+                    <span class="add-btn" role="button" tabindex="0">+ Add</span>
+                </div>
+                <button class="auth-btn" id="authBtn">Sign In / Up</button>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="mobile-toggle" id="menu-toggle" aria-label="Open menu">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7">
+                    </path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Drawer -->
+        <div class="mobile-menu" id="mobile-menu">
+            <a href="#services-showcase">Explore Services</a>
+            <a href="doctor-registration.html">Doctor Registration</a>
+            <a href="doctor-login.html">Doctor Login</a>
+            <div class="mobile-footer">
+                <div class="mobile-wallet">
+                    <span>Wallet Balance: <strong>₹0</strong></span>
+                    <button id="mobileAddMoney">Add Money</button>
+                </div>
+                <div class="mobile-actions">
+                    <button id="mobileCartToggle" class="cart-toggle" aria-label="Open cart">🛒 <span
+                            id="mobileCartCount">0</span></button>
+                    <button type="button" class="patient-notification-toggle" data-patient-notifications-toggle
+                        aria-label="Chat notifications">
+                        🔔 Chat notifications
+                        <span class="patient-notification-count" data-patient-notification-count hidden>0</span>
+                    </button>
+                    <button class="auth-btn" id="mobileAuthBtn" style="width: 100%;">Sign In / Up</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- First Aid Shortcut (top section) -->
+    <section class="first-aid-shortcut" aria-hidden="false">
+        <div class="first-aid-container">
+            <div class="first-aid-card">
+                <div class="first-aid-info">
+                    <strong>First Aid</strong>
+                    <p>Quick first-aid guide and essentials — see steps and add items to cart.</p>
+                </div>
+                <div class="first-aid-actions">
+                    <a href="first-aid.html" class="btn primary">Open First Aid</a>
+                    <button id="openFirstAidGuide" class="btn secondary">View Guide</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services-showcase" class="services-showcase" aria-label="Premium services overview">
+        <div class="services-showcase-card">
+            <div class="services-showcase-header">
+                <div>
+                    <p class="eyebrow">Care at a glance</p>
+                    <h2>Everything you need, in one place.</h2>
+                </div>
+                <a href="health-tools.html" class="btn secondary">View Health Tools</a>
+            </div>
+
+            <div class="services-grid">
+                <article class="service-panel">
+                    <h3>Consult Doctors</h3>
+                    <p>Book an appointment to unlock chat and call access with your doctor.</p>
+                    <div class="service-links">
+                        <button type="button" class="btn secondary" id="openAppointments">📅 Appointments</button>
+                    </div>
+                </article>
+
+                <article class="service-panel">
+                    <h3>Specialists</h3>
+                    <p>Book care across cardiology, pediatrics, therapy, and orthopedics.</p>
+                    <div class="service-links" id="specialistServiceLinks">
+                        <a href="cardio.html">❤️ Cardiologist</a>
+                        <a href="Pediatric.html">👶 Pediatrician</a>
+                        <a href="therapy.html">🧠 Therapy</a>
+                        <a href="Orthopedic.html">🦴 Orthopedic</a>
+                        <a href="chat-with-doctor.html">All Specialists</a>
+                    </div>
+                </article>
+
+                <article class="service-panel">
+                    <h3>Free Health Tools</h3>
+                    <p>Explore helpful calculators, wellness guides, and daily health support.</p>
+                    <div class="service-links">
+                        <a href="health-tools.html">🧮 Open Tools</a>
+                    </div>
+                </article>
+
+                <article class="service-panel">
+                    <h3>Lab Tests & Pharmacy</h3>
+                    <p>Book diagnostics, order test kits, and buy essentials from one place.</p>
+                    <div class="service-links">
+                        <a href="lab-tests.html">🧪 Lab Tests</a>
+                        <a href="pharmacy.html">💊 Pharmacy</a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- First Aid Quick Guide Modal -->
+    <div id="firstAidQuickModal" class="modal" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Quick First Aid Guide</h2>
+                <button class="modal-close" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                    <button class="btn secondary topic-btn" data-topic="cuts">Cuts & Wounds</button>
+                    <button class="btn secondary topic-btn" data-topic="burn">Minor Burns</button>
+                    <button class="btn secondary topic-btn" data-topic="bleeding">Severe Bleeding</button>
+                    <button class="btn secondary topic-btn" data-topic="choking">Choking</button>
+                </div>
+
+                <div id="quickGuideContent" style="margin-top:14px;">
+                    <div id="quickGuideImage" class="article-figure" style="height:200px;"></div>
+                    <h3 id="quickGuideTitle" style="margin-top:12px;">Select a topic</h3>
+                    <ol id="quickGuideSteps" style="margin-top:8px;padding-left:18px;color:var(--text-light);"></ol>
+                    <p id="quickGuideNote" class="article-meta" style="margin-top:8px;"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Health Articles / Daily Updates -->
+    <section id="healthUpdates" class="health-updates">
+        <div class="health-updates-container">
+            <div class="updates-header">
+                <strong>Daily Health Updates</strong>
+                <span id="updatesDate" class="updates-date"></span>
+            </div>
+            <div id="updatesList" class="updates-list">
+                <!-- populated by articles.js -->
+            </div>
+            <div class="updates-actions">
+                <button id="prevUpdate" class="btn secondary">‹</button>
+                <button id="nextUpdate" class="btn secondary">›</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Article Read More Modal -->
+    <div id="articleModal" class="modal" role="dialog" aria-hidden="true" style="display:none;">
+        <div class="modal-content" role="document">
+            <div class="modal-header">
+                <h2 id="articleModalTitle">Article</h2>
+                <button class="modal-close" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body" id="articleModalBody">
+                <!-- populated by articles.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for Mobile Drawer Toggle and submenu handling -->
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+
+        // Expand/collapse mobile submenus (Consult Doctors / Specialists)
+        function toggleMobileSubmenu(id, expanded) {
+            const el = document.getElementById(id);
+            const trigger = document.querySelector('[data-target="' + id + '"]');
+            if (!el || !trigger) return;
+            const isActive = expanded !== undefined ? expanded : !el.classList.contains('active');
+            el.classList.toggle('active', isActive);
+            el.setAttribute('aria-hidden', String(!isActive));
+            trigger.setAttribute('aria-expanded', String(isActive));
+            const chev = trigger.querySelector('.chev');
+            if (chev) chev.textContent = isActive ? '▾' : '▸';
+        }
+
+        document.addEventListener('click', function (e) {
+            const expand = e.target.closest && e.target.closest('.mobile-expand');
+            if (expand) {
+                const target = expand.dataset.target;
+                e.preventDefault();
+                toggleMobileSubmenu(target);
+                return;
+            }
+        });
+
+        // keyboard support for mobile expanders (Enter / Space)
+        document.addEventListener('keydown', function (e) {
+            if (!mobileMenu.classList.contains('active')) return;
+            const focused = document.activeElement;
+            if (focused && focused.classList && focused.classList.contains('mobile-expand')) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    const target = focused.dataset.target;
+                    toggleMobileSubmenu(target);
+                }
+            }
+            if (e.key === 'Escape') {
+                // close mobile menu on Escape
+                if (mobileMenu.classList.contains('active')) mobileMenu.classList.remove('active');
+                // close any open submenus
+                document.querySelectorAll('.mobile-submenu.active').forEach(s => toggleMobileSubmenu(s.id, false));
+            }
+        });
+    </script>
+
+    <!-- Chat modal markup + script -->
+    <div id="chatModal" class="chat-modal" role="dialog" aria-hidden="true">
+        <div class="chat-modal-content">
+            <div class="chat-modal-header">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <button class="chat-modal-back" aria-label="Back">←</button>
+                    <div id="chatModalTitle">Chat</div>
+                    <button class="chat-modal-close" aria-label="Close" style="display:none;">✕</button>
+                </div>
+
+            </div>
+            <iframe id="chatModalIframe" class="chat-modal-iframe" src="about:blank"></iframe>
+        </div>
+    </div>
+
+    <!-- Global Cart Panel -->
+    <aside id="globalCart" class="global-cart" role="dialog" aria-hidden="true">
+        <div class="global-cart-content">
+            <div class="global-cart-header">
+                <h3>Cart</h3>
+                <button class="cart-close" aria-label="Close">✕</button>
+            </div>
+            <div id="globalCartItems" class="cart-items">
+                <p class="empty-state">Your cart is empty.</p>
+            </div>
+            <div class="cart-history">
+                <h4>Order History</h4>
+                <div id="globalOrderHistory" class="history-items"></div>
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">Total: ₹<span id="globalCartTotal">0</span></div>
+                <button class="btn primary" id="globalCheckout">Checkout</button>
+            </div>
+        </div>
+    </aside>
+
+    <div id="appointmentsModal" class="modal" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>My Appointments &amp; History</h2>
+                <button class="modal-close" type="button" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body">
+                <section class="patient-history-section">
+                    <h3>Upcoming & requested appointments</h3>
+                    <div id="patientAppointmentsPreview" class="patient-appointments-preview">
+                        <p class="patient-appointments-empty">Sign in to view your booked appointments.</p>
+                    </div>
+                </section>
+                <section class="patient-history-section">
+                    <h3>Visit history</h3>
+                    <div id="patientVisitHistory" class="patient-appointments-preview">
+                        <p class="patient-appointments-empty">Sign in to view your visit history.</p>
+                    </div>
+                </section>
+                <section class="patient-history-section">
+                    <h3>Prescribed medicines</h3>
+                    <div id="patientPrescriptionHistory" class="patient-appointments-preview">
+                        <p class="patient-appointments-empty">Sign in to view your prescription history.</p>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <div id="callModal" class="modal" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Call Doctor</h2>
+                <button class="modal-close" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body">
+                <p>Choose how you'd like to connect with a doctor. Our care team will route your request to an available
+                    physician shortly.</p>
+                <div class="modal-actions">
+                    <button type="button" class="btn secondary demo-call" data-call-mode="audio">Audio Call</button>
+                    <button type="button" class="btn secondary demo-call" data-call-mode="video">Video Call</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="patientChatNotificationsModal" class="modal" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Doctor chat notifications</h2>
+                <button class="modal-close" type="button" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body">
+                <div id="patientChatNotificationsList" class="patient-chat-notifications-list">
+                    <p class="patient-appointments-empty">Sign in to view chat notifications.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Booking modal -->
+        <div id="bookModal" class="modal" role="dialog" aria-hidden="true">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Book Appointment</h2>
+                    <button class="modal-close" aria-label="Close">✕</button>
+                </div>
+                <div class="modal-body">
+                    <form id="bookForm">
+                        <label>Name<br><input type="text" name="name" required></label>
+                        <label>Date<br><input type="date" name="date" required></label>
+                        <label>Time<br><input type="time" name="time" required></label>
+                        <div class="modal-actions" style="margin-top:12px;">
+                            <button type="submit" class="btn primary">Confirm</button>
+                            <button type="button" class="btn secondary modal-close">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <span>© 2026 DockTalk. All rights reserved.</span>
+            <a href="privacy-policy.html">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <script src="api.js"></script>
+    <script src="appointment-access.js"></script>
+    <script src="call.js"></script>
+    <script src="chat-modal.js"></script>
+    <script src="cart.js"></script>
+    <script src="auth.js"></script>
+    <script src="articles.js"></script>
+    <script>
+        async function loadPatientAppointments() {
+            const container = document.getElementById('patientAppointmentsPreview');
+            const visitHistory = document.getElementById('patientVisitHistory');
+            const prescriptionHistory = document.getElementById('patientPrescriptionHistory');
+            if (!container || !visitHistory || !prescriptionHistory || !window.DockTalkAPI) return;
+
+            if (!window.DockTalkAPI.getToken()) {
+                container.innerHTML =
+                    '<p class="patient-appointments-empty">Sign in to view your booked appointments.</p>';
+                visitHistory.innerHTML =
+                    '<p class="patient-appointments-empty">Sign in to view your visit history.</p>';
+                prescriptionHistory.innerHTML =
+                    '<p class="patient-appointments-empty">Sign in to view your prescription history.</p>';
+                return;
+            }
+
+            container.innerHTML =
+                '<p class="patient-appointments-empty">Loading your appointments...</p>';
+            visitHistory.innerHTML =
+                '<p class="patient-appointments-empty">Loading visit history...</p>';
+            prescriptionHistory.innerHTML =
+                '<p class="patient-appointments-empty">Loading prescriptions...</p>';
+
+            const escapeHistoryText = (value) => String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+
+            try {
+                const history = await window.DockTalkAPI.getPatientHistory();
+                const appointments = Array.isArray(history.appointments) ? history.appointments : [];
+                const now = new Date();
+                const isPastAppointment = (appointment) => {
+                    const start = new Date(
+                        String(appointment.appointmentDate || '') + 'T' +
+                        String(appointment.appointmentTime || '00:00') + ':00'
+                    );
+                    const status = String(appointment.status || '').toLowerCase();
+                    return ['completed', 'cancelled', 'rejected'].includes(status) ||
+                        (!Number.isNaN(start.getTime()) && start < now);
+                };
+                const activeAppointments = appointments.filter((appointment) => !isPastAppointment(appointment));
+                const pastAppointments = appointments.filter(isPastAppointment);
+                if (!activeAppointments.length) {
+                    container.innerHTML =
+                        '<p class="patient-appointments-empty">No upcoming or requested appointments.</p>';
+                } else {
+                    container.innerHTML = activeAppointments.map((appointment) => {
+                        const doctorName = String(appointment.doctorName || 'Selected doctor');
+                        const safeDoctorName = doctorName
+                            .replace(/&/g, '&amp;')
+                            .replace(/</g, '&lt;')
+                            .replace(/>/g, '&gt;')
+                            .replace(/"/g, '&quot;')
+                            .replace(/'/g, '&#039;');
+                        const status = String(appointment.status || 'pending').toLowerCase();
+                        const chatAvailable = window.DockTalkAppointmentAccess
+                            ? window.DockTalkAppointmentAccess.isChatAvailable(appointment)
+                            : false;
+                        const activeAppointment = window.DockTalkAppointmentAccess
+                            ? window.DockTalkAppointmentAccess.isActiveAppointment(appointment)
+                            : false;
+                        return `
+                            <div class="patient-appointment-card">
+                                <div>
+                                    <strong>${safeDoctorName}</strong>
+                                    <small>${escapeHistoryText(appointment.appointmentDate || 'Date not set')} • ${escapeHistoryText(appointment.appointmentTime || 'Time not set')} • ${escapeHistoryText(appointment.mode || 'Consultation')}</small>
+                                    <div class="patient-appointment-contact-actions">
+                                        <button type="button" class="patient-appointment-chat" data-doctor-chat="${encodeURIComponent(doctorName)}" data-appointment-chat-id="${escapeHistoryText(appointment.id)}" ${chatAvailable ? '' : 'disabled'}>Chat</button>
+                                        <button type="button" class="patient-appointment-call" data-doctor-call="${encodeURIComponent(doctorName)}" data-call-mode="video" ${activeAppointment ? '' : 'disabled'}>Call</button>
+                                    </div>
+                                </div>
+                                <div class="patient-appointment-card-actions">
+                                    <span class="patient-appointment-status ${status}">${escapeHistoryText(status)}</span>
+                                    <button type="button" class="patient-appointment-cancel" data-cancel-appointment="${appointment.id}">Cancel</button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                visitHistory.innerHTML = pastAppointments.length
+                    ? pastAppointments.map((appointment) => `
+                        <article class="patient-history-entry">
+                            <strong>${escapeHistoryText(appointment.doctorName || 'Selected doctor')}</strong>
+                            <small>${escapeHistoryText(appointment.appointmentDate || 'Date not set')} • ${escapeHistoryText(appointment.appointmentTime || 'Time not set')} • ${escapeHistoryText(appointment.status || 'pending')}</small>
+                        </article>
+                    `).join('')
+                    : '<p class="patient-appointments-empty">No past visits yet.</p>';
+
+                const prescriptions = Array.isArray(history.prescriptions) ? history.prescriptions : [];
+                prescriptionHistory.innerHTML = prescriptions.length
+                    ? prescriptions.map((prescription) => `
+                        <article class="patient-history-entry">
+                            <strong>${escapeHistoryText(prescription.doctorName || 'Doctor')} • ${new Date(prescription.created_at).toLocaleDateString()}</strong>
+                            <ul>${(prescription.medicines || []).map((medicine) => `
+                                <li><strong>${escapeHistoryText(medicine.name)}</strong> — ${escapeHistoryText(medicine.dosage)}, ${escapeHistoryText(medicine.frequency)}, ${escapeHistoryText(medicine.duration)}
+                                    ${medicine.instructions ? `<br>${escapeHistoryText(medicine.instructions)}` : ''}
+                                </li>
+                            `).join('')}</ul>
+                            ${prescription.notes ? `<p>${escapeHistoryText(prescription.notes)}</p>` : ''}
+                        </article>
+                    `).join('')
+                    : '<p class="patient-appointments-empty">No prescriptions recorded.</p>';
+            } catch (error) {
+                container.innerHTML =
+                    '<p class="patient-appointments-empty">Unable to load appointments.</p>';
+                visitHistory.innerHTML = '<p class="patient-appointments-empty">Unable to load visit history.</p>';
+                prescriptionHistory.innerHTML = '<p class="patient-appointments-empty">Unable to load prescriptions.</p>';
+            }
+        }
+
+        function renderPatientChatNotifications(notifications) {
+            const container = document.getElementById('patientChatNotificationsList');
+            if (!container) return;
+            container.replaceChildren();
+
+            if (!notifications.length) {
+                const empty = document.createElement('p');
+                empty.className = 'patient-appointments-empty';
+                empty.textContent = 'You have no unread chat notifications.';
+                container.appendChild(empty);
+                return;
+            }
+
+            notifications.forEach((notification) => {
+                const card = document.createElement('article');
+                card.className = 'patient-chat-notification';
+
+                const title = document.createElement('strong');
+                title.textContent = notification.doctorName || 'Your doctor';
+                card.appendChild(title);
+
+                const preview = document.createElement('p');
+                preview.textContent = notification.message || 'Your doctor sent you an attachment.';
+                card.appendChild(preview);
+
+                const date = document.createElement('small');
+                date.textContent = notification.created_at
+                    ? new Date(notification.created_at).toLocaleString()
+                    : '';
+                card.appendChild(date);
+
+                const openChat = document.createElement('button');
+                openChat.type = 'button';
+                openChat.className = 'patient-appointment-chat';
+                openChat.textContent = 'Open chat';
+                openChat.dataset.patientChatNotification = notification.id || notification._id || '';
+                openChat.dataset.doctorName = notification.doctorName || '';
+                openChat.dataset.appointmentId = notification.appointmentId || '';
+                card.appendChild(openChat);
+                container.appendChild(card);
+            });
+        }
+
+        async function loadPatientChatNotifications() {
+            const toggles = document.querySelectorAll('[data-patient-notifications-toggle]');
+            const badgeElements = document.querySelectorAll('[data-patient-notification-count]');
+            const container = document.getElementById('patientChatNotificationsList');
+            const api = window.DockTalkAPI;
+            const user = api && api.getCurrentUser();
+            const isPatient = Boolean(api && api.getToken() && user && user.role === 'patient');
+
+            toggles.forEach((toggle) => { toggle.hidden = !isPatient; });
+            if (!isPatient) {
+                badgeElements.forEach((badge) => {
+                    badge.hidden = true;
+                    badge.textContent = '0';
+                });
+                if (container) {
+                    container.innerHTML = '<p class="patient-appointments-empty">Sign in as a patient to view chat notifications.</p>';
+                }
+                return;
+            }
+
+            try {
+                const notifications = await api.getPatientChatNotifications();
+                const unread = Array.isArray(notifications) ? notifications : [];
+                badgeElements.forEach((badge) => {
+                    badge.textContent = String(unread.length);
+                    badge.hidden = unread.length === 0;
+                });
+                toggles.forEach((toggle) => {
+                    toggle.setAttribute('aria-label', 'Chat notifications' +
+                        (unread.length ? ', ' + unread.length + ' unread' : ''));
+                });
+                if (document.getElementById('patientChatNotificationsModal')?.classList.contains('active')) {
+                    renderPatientChatNotifications(unread);
+                }
+            } catch (error) {
+                console.warn('Unable to load patient chat notifications.', error);
+                if (container) {
+                    container.innerHTML = '<p class="patient-appointments-empty">Unable to load chat notifications. Please try again.</p>';
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadPatientAppointments);
+        document.addEventListener('docktalk-auth-changed', loadPatientAppointments);
+        setInterval(loadPatientAppointments, 10000);
+        document.addEventListener('DOMContentLoaded', loadPatientChatNotifications);
+        document.addEventListener('docktalk-auth-changed', loadPatientChatNotifications);
+        setInterval(loadPatientChatNotifications, 10000);
+
+        document.addEventListener('click', (event) => {
+            const appointmentLink = event.target.closest('#openAppointments');
+            if (!appointmentLink) return;
+            event.preventDefault();
+            const appointmentsModal = document.getElementById('appointmentsModal');
+            if (appointmentsModal) appointmentsModal.classList.add('active');
+            loadPatientAppointments();
+        });
+
+        document.addEventListener('click', async (event) => {
+            const notificationToggle = event.target.closest('[data-patient-notifications-toggle]');
+            if (notificationToggle) {
+                const modal = document.getElementById('patientChatNotificationsModal');
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenu) mobileMenu.classList.remove('active');
+                if (modal) modal.classList.add('active');
+                await loadPatientChatNotifications();
+                return;
+            }
+
+            const notificationButton = event.target.closest('[data-patient-chat-notification]');
+            if (!notificationButton) return;
+
+            notificationButton.disabled = true;
+            try {
+                await window.DockTalkAPI.markPatientChatNotificationRead(
+                    notificationButton.dataset.patientChatNotification
+                );
+                const doctorName = notificationButton.dataset.doctorName;
+                const appointmentId = notificationButton.dataset.appointmentId;
+                await loadPatientChatNotifications();
+                document.getElementById('patientChatNotificationsModal')?.classList.remove('active');
+
+                const modal = document.getElementById('chatModal');
+                const iframe = document.getElementById('chatModalIframe');
+                if (doctorName && modal && iframe) {
+                    iframe.src = 'chat.html?doctor=' + encodeURIComponent(doctorName) +
+                        '&appointmentId=' + encodeURIComponent(appointmentId) +
+                        '&notification=true';
+                    document.getElementById('chatModalTitle').textContent = 'Chat with ' + doctorName;
+                    modal.classList.add('active');
+                }
+            } catch (error) {
+                notificationButton.disabled = false;
+                alert(error.message || 'Unable to open this chat notification.');
+            }
+        });
+
+        document.addEventListener('click', async (event) => {
+            const chatButton = event.target.closest('[data-doctor-chat]');
+            if (chatButton && !chatButton.disabled) {
+                const doctorName = decodeURIComponent(chatButton.dataset.doctorChat);
+                const appointmentId = chatButton.dataset.appointmentChatId;
+                const modal = document.getElementById('chatModal');
+                const iframe = document.getElementById('chatModalIframe');
+                if (modal && iframe) {
+                    iframe.src = 'chat.html?doctor=' + encodeURIComponent(doctorName) +
+                        '&appointmentId=' + encodeURIComponent(appointmentId);
+                    document.getElementById('chatModalTitle').textContent = 'Chat with ' + doctorName;
+                    modal.classList.add('active');
+                }
+                return;
+            }
+
+            const callButton = event.target.closest('[data-doctor-call]');
+            if (callButton && !callButton.disabled && window.DockTalkCall) {
+                window.DockTalkCall.open(
+                    'video',
+                    decodeURIComponent(callButton.dataset.doctorCall)
+                );
+                return;
+            }
+
+            const cancelButton = event.target.closest('[data-cancel-appointment]');
+            if (!cancelButton) return;
+
+            if (!confirm('Cancel this appointment?')) return;
+
+            cancelButton.disabled = true;
+            cancelButton.textContent = 'Cancelling...';
+            try {
+                await window.DockTalkAPI.cancelAppointment(cancelButton.dataset.cancelAppointment);
+                await loadPatientAppointments();
+                alert('Appointment cancelled successfully.');
+            } catch (error) {
+                cancelButton.disabled = false;
+                cancelButton.textContent = 'Cancel';
+                alert(error.message);
+            }
+        });
+
+        (async function loadRegisteredSpecialties() {
+            const container = document.getElementById('specialistServiceLinks');
+            if (!container || !window.DockTalkAPI) return;
+
+            const knownSpecialties = new Set(['Cardiology', 'Pediatrics', 'Therapy', 'Orthopedics']);
+            const specialtyIcons = {
+                Dermatology: '🧴',
+                Neurology: '🧠',
+                Gynecology: '🤰',
+                ENT: '👂',
+                Ophthalmology: '👁️',
+                Dentistry: '🦷',
+                Nutrition: '🥗',
+                'General Medicine': '🩺'
+            };
+
+            try {
+                const doctors = await window.DockTalkAPI.getDoctors();
+                const extraSpecialties = new Map();
+
+                doctors.forEach((doctor) => {
+                    const specialty = String(doctor.specialty || '').trim();
+                    if (!specialty) return;
+
+                    const knownMatch = [...knownSpecialties].some((known) =>
+                        specialty.toLowerCase() === known.toLowerCase() ||
+                        specialty.toLowerCase().includes(known.toLowerCase())
+                    );
+                    if (knownMatch) return;
+
+                    const key = specialty.toLowerCase();
+                    if (!extraSpecialties.has(key)) extraSpecialties.set(key, specialty);
+                });
+
+                const allLink = container.querySelector('a[href="chat-with-doctor.html"]');
+                extraSpecialties.forEach((specialty) => {
+                    if (container.querySelector('[data-specialty="' + CSS.escape(specialty) + '"]')) return;
+                    const link = document.createElement('a');
+                    link.href = 'doctor-category.html?specialty=' + encodeURIComponent(specialty);
+                    link.className = 'registered-specialty-link';
+                    link.dataset.specialty = specialty;
+                    link.textContent = (specialtyIcons[specialty] || '🩺') + ' ' + specialty;
+                    container.insertBefore(link, allLink);
+                });
+            } catch (error) {
+                console.warn('Unable to load registered specialties.', error);
+            }
+        })();
+    </script>
+    <script>
+        // Quick First Aid topics for the main-page modal
+        (function () {
+            const cutsIllustration = `<svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Medical illustration of a bleeding hand">
+                    <rect width="400" height="260" rx="24" fill="#f8fbff"/>
+                    <rect x="40" y="40" width="320" height="180" rx="20" fill="#ffffff" stroke="#dbeafe" stroke-width="2"/>
+                    <path d="M170 90c-16 0-28 12-28 28v18c0 8-6 14-14 14h-8c-9 0-16 7-16 16v16c0 8 7 14 16 14h18l12 18c2 3 7 4 10 1l8-7 11 10c3 3 8 2 10-1l12-22h16c9 0 16-6 16-14v-10c0-8 6-14 14-14h8c9 0 16-7 16-16v-18c0-16-12-28-28-28H170z" fill="#f2c18d"/>
+                    <path d="M178 118c0-10 8-18 18-18h10c10 0 18 8 18 18v8c0 10-8 18-18 18h-10c-10 0-18-8-18-18v-8z" fill="#f5d4b4"/>
+                    <rect x="188" y="116" width="22" height="32" rx="8" fill="#ffffff"/>
+                    <rect x="196" y="118" width="6" height="18" rx="3" fill="#f59e0b"/>
+                    <path d="M199 128c8-4 14-10 18-18" stroke="#dc2626" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M178 138c7 7 17 12 28 12" stroke="#dc2626" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M208 124c7 0 14 3 19 8" stroke="#dc2626" stroke-width="5" stroke-linecap="round"/>
+                    <rect x="182" y="154" width="34" height="20" rx="10" fill="#fef2f2" stroke="#fca5a5" stroke-width="2"/>
+                    <path d="M190 164l8-8 8 8" stroke="#dc2626" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="272" cy="112" r="12" fill="#dbeafe"/>
+                    <path d="M272 102v20M262 112h20" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+                </svg>`;
+            const burnIllustration = `<svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Medical illustration of a minor burn">
+                    <rect width="400" height="260" rx="24" fill="#fff7ed"/>
+                    <rect x="40" y="40" width="320" height="180" rx="20" fill="#ffffff" stroke="#fde68a" stroke-width="2"/>
+                    <path d="M168 92c-16 0-28 12-28 28v22h-10c-10 0-18 8-18 18v14c0 10 8 18 18 18h56c10 0 18-8 18-18v-14c0-10-8-18-18-18h-10v-22c0-16-12-28-28-28z" fill="#f59e0b"/>
+                    <path d="M158 116c0-7 5-12 12-12h12c7 0 12 5 12 12v8c0 7-5 12-12 12h-12c-7 0-12-5-12-12v-8z" fill="#fbbf24"/>
+                    <path d="M162 98c8-12 22-18 36-18" stroke="#fb923c" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M154 144c10 8 22 12 35 12" stroke="#fdba74" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M190 128c8 6 14 10 22 12" stroke="#ef4444" stroke-width="4" stroke-linecap="round"/>
+                    <rect x="175" y="153" width="28" height="18" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="2"/>
+                    <path d="M182 162l7-7 7 7" stroke="#dc2626" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="278" cy="112" r="12" fill="#fef3c7"/>
+                    <path d="M278 102v20M268 112h20" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+                </svg>`;
+            const bleedingIllustration = `<svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Medical illustration of severe bleeding">
+                    <rect width="400" height="260" rx="24" fill="#fef2f2"/>
+                    <rect x="40" y="40" width="320" height="180" rx="20" fill="#ffffff" stroke="#fecaca" stroke-width="2"/>
+                    <path d="M182 90c-16 0-28 12-28 28v10c0 8-6 14-14 14h-8c-9 0-16 7-16 16v16c0 8 7 14 16 14h18l12 18c2 3 7 4 10 1l8-7 11 10c3 3 8 2 10-1l12-22h16c9 0 16-6 16-14v-10c0-8 6-14 14-14h8c9 0 16-7 16-16v-18c0-16-12-28-28-28H182z" fill="#f2c18d"/>
+                    <path d="M194 118c8-4 14-10 18-18" stroke="#dc2626" stroke-width="6" stroke-linecap="round"/>
+                    <path d="M182 138c7 7 17 12 28 12" stroke="#dc2626" stroke-width="6" stroke-linecap="round"/>
+                    <path d="M212 124c7 0 14 3 19 8" stroke="#dc2626" stroke-width="6" stroke-linecap="round"/>
+                    <path d="M168 154c10 8 22 12 35 12" stroke="#ef4444" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M209 155c7 0 14 3 20 9" stroke="#ef4444" stroke-width="5" stroke-linecap="round"/>
+                    <circle cx="282" cy="112" r="12" fill="#fee2e2"/>
+                    <path d="M282 102v20M272 112h20" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/>
+                </svg>`;
+            const chokingIllustration = `<svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Medical illustration of choking response">
+                    <rect width="400" height="260" rx="24" fill="#f8fafc"/>
+                    <rect x="40" y="40" width="320" height="180" rx="20" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+                    <path d="M164 106c0-20 16-36 36-36h8c20 0 36 16 36 36v20c0 20-16 36-36 36h-8c-20 0-36-16-36-36v-20z" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/>
+                    <circle cx="188" cy="122" r="8" fill="#0f172a"/>
+                    <circle cx="228" cy="122" r="8" fill="#0f172a"/>
+                    <path d="M188 150c12 8 24 8 36 0" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/>
+                    <path d="M170 170c17 12 44 12 60 0" stroke="#dc2626" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M232 183c9 0 16 7 16 16v10c0 10-8 18-18 18h-20c-8 0-14-6-14-14" stroke="#2563eb" stroke-width="4" stroke-linecap="round"/>
+                    <circle cx="280" cy="112" r="12" fill="#dbeafe"/>
+                    <path d="M280 102v20M270 112h20" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+                </svg>`;
+
+            const topics = {
+                cuts: {
+                    title: 'Cuts & Minor Wounds',
+                    image: cutsIllustration,
+                    steps: [
+                        'Wash your hands before touching the wound.',
+                        'Rinse wound under clean running water to remove debris.',
+                        'Apply gentle pressure with a clean cloth to stop bleeding.',
+                        'Apply antiseptic and cover with a sterile dressing or bandage.'
+                    ],
+                    note: 'Seek medical care for deep, gaping, or contaminated wounds.'
+                },
+                burn: {
+                    title: 'Minor Burns',
+                    image: burnIllustration,
+                    steps: [
+                        'Cool the burn with running cool (not icy) water for 10–20 minutes.',
+                        'Remove jewelry and tight clothing near the burn.',
+                        'Cover with a non-stick sterile dressing and do not apply creams.',
+                    ],
+                    note: 'Seek emergency care for large, deep, or chemical burns.'
+                },
+                bleeding: {
+                    title: 'Severe Bleeding',
+                    image: bleedingIllustration,
+                    steps: [
+                        'Call for emergency help immediately if bleeding is severe.',
+                        'Apply firm pressure to the wound with a clean cloth or bandage.',
+                        'If possible, elevate the bleeding part above heart level.',
+                        'Do not remove embedded objects—apply padding around them.'
+                    ],
+                    note: 'If bleeding does not stop, consider tourniquet use by trained personnel.'
+                },
+                choking: {
+                    title: 'Choking (Responsive Adult)',
+                    image: chokingIllustration,
+                    steps: [
+                        'Encourage coughing if the person can breathe or cough.',
+                        'If unable to breathe, give 5 back blows between the shoulder blades.',
+                        'If still obstructed, perform abdominal thrusts (Heimlich manoeuvre).'
+                    ],
+                    note: 'Call emergency services immediately for unresponsive or worsening cases.'
+                }
+            };
+
+            function renderTopic(key) {
+                const t = topics[key]; if (!t) return;
+                document.getElementById('quickGuideTitle').textContent = t.title;
+                const imageContainer = document.getElementById('quickGuideImage');
+                const isInlineSvg = typeof t.image === 'string' && t.image.trim().startsWith('<svg');
+                imageContainer.innerHTML = isInlineSvg
+                    ? t.image
+                    : '<img src="' + t.image + '" alt="' + t.title + '" style="width:100%;height:100%;object-fit:cover;">';
+                const ol = document.getElementById('quickGuideSteps'); ol.innerHTML = '';
+                t.steps.forEach(s => { const li = document.createElement('li'); li.textContent = s; ol.appendChild(li); });
+                document.getElementById('quickGuideNote').textContent = t.note;
+            }
+
+            // Open modal
+            const openBtn = document.getElementById('openFirstAidGuide');
+            const modal = document.getElementById('firstAidQuickModal');
+            openBtn && openBtn.addEventListener('click', function () {
+                modal.classList.add('active');
+                renderTopic('cuts');
+                // focus first button
+                try { modal.querySelector('.topic-btn').focus(); } catch (e) { }
+            });
+
+            // Topic buttons
+            document.addEventListener('click', function (e) {
+                const tb = e.target.closest && e.target.closest('.topic-btn');
+                if (tb) {
+                    const k = tb.getAttribute('data-topic'); renderTopic(k);
+                }
+            });
+        })();
+    </script>
+    <script>
+        document.addEventListener('click', function (e) {
+            const callLink = e.target.closest('a.call');
+            const closeButton = e.target.closest('.modal-close');
+            const overlay = e.target.closest('.modal');
+
+            if (callLink) {
+                e.preventDefault();
+                document.getElementById('callModal').classList.add('active');
+            }
+
+            // Book button detection: either element with class 'book' or text 'Book'
+            const possibleBook = e.target.closest('button, a');
+            if (possibleBook && (/^\s*Book\s*$/i).test(possibleBook.textContent)) {
+                e.preventDefault();
+                document.getElementById('bookModal').classList.add('active');
+            }
+
+
+            if (closeButton) {
+                e.preventDefault();
+                closeButton.closest('.modal').classList.remove('active');
+            }
+
+            if (overlay && e.target === overlay) {
+                overlay.classList.remove('active');
+            }
+
+            const callButton = e.target.closest && e.target.closest('.demo-call');
+            const addMoney = e.target.closest && e.target.closest('.add-btn, #mobileAddMoney');
+            if (addMoney) alert('Wallet top-up is available in the production version (demo).');
+        });
+        // Simple form handling for booking
+        document.getElementById('bookForm') && document.getElementById('bookForm').addEventListener('submit', async function (ev) {
+            ev.preventDefault();
+            const data = new FormData(ev.target);
+            const name = data.get('name');
+            const date = data.get('date');
+            const time = data.get('time');
+
+            const api = window.DockTalkAPI;
+            if (!api || !api.getToken()) {
+                alert('Please sign in before booking an appointment.');
+                return;
+            }
+
+            try {
+                await api.createAppointment({
+                    doctorName: 'General Consultation',
+                    date,
+                    time,
+                    mode: 'video',
+                    notes: `${name} booked from home page.`
+                });
+            } catch (error) {
+                alert(`Appointment could not be saved: ${error.message}`);
+                return;
+            }
+
+            alert('Appointment requested for ' + name + ' on ' + date + ' at ' + time + '. Our team will confirm shortly.');
+            document.getElementById('bookModal').classList.remove('active');
+            ev.target.reset();
+            loadPatientAppointments();
+        });
+    </script>
+</body>
+
+</html>

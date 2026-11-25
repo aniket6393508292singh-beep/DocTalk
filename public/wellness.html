@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Wellness Articles</title>
+  <link rel="stylesheet" href="health-tools.css">
+</head>
+<body>
+  <div class="tools-container">
+    <header class="tools-header">
+      <button type="button" class="btn secondary back-link" onclick="history.back()">← Go Back</button>
+      <h1>Wellness Articles</h1>
+      <p>Short reads on sleep, stress, activity and building healthy routines.</p>
+    </header>
+
+    <section class="tool-card">
+      <article>
+        <h2>Sleep Hygiene</h2>
+        <p>Regular sleep schedule, reduce screens before bed, and create a calm sleep environment.</p>
+      </article>
+
+      <article>
+        <h2>Stress Management</h2>
+        <p>Try brief breathing exercises, short walks, and setting small daily goals to reduce stress.</p>
+      </article>
+
+      <article>
+        <h2>Move More</h2>
+        <p>Aim for small bursts of movement during the day — stairs, short walks, and standing breaks.</p>
+      </article>
+    </section>
+    <section class="tool-card" style="margin-top:18px;">
+      <h2>1-minute Breathing Exercise</h2>
+      <p>Follow the guided breathing to help reduce stress. Use the start button and inhale/exhale with the prompts.</p>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:8px;">
+        <button id="startBreath" class="btn primary">Start 1-min Exercise</button>
+        <button id="stopBreath" class="btn secondary">Stop</button>
+      </div>
+      <p id="breathPrompt" style="margin-top:12px;font-weight:700;color:#0f172a"></p>
+
+      <div class="tool-actions" style="margin-top:10px;">
+        <a href="chat.html?doctor=Wellness+Coach&hideClose=1" class="btn primary chat" data-doctor="Wellness Coach" data-hide-close="true">Chat with Coach</a>
+        <a href="#" class="btn secondary call">Call for Support</a>
+      </div>
+    </section>
+  </div>
+  <!-- Local Call modal for this page -->
+  <div id="callModalLocal" class="modal" role="dialog" aria-hidden="true" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Call Support</h2>
+        <button class="modal-close" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>Choose how you'd like to connect with a wellness coach/support.</p>
+        <div class="modal-actions">
+          <button type="button" class="btn secondary" id="audioCall">Audio Call</button>
+          <button type="button" class="btn secondary" id="videoCall">Video Call</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+<script>
+  let breathTimer = null; let breathStep = 0; const prompts = ['Get ready...','Inhale','Hold','Exhale'];
+  function showPrompt(t){ document.getElementById('breathPrompt').textContent = t; }
+  document.getElementById('startBreath').addEventListener('click', function(){
+    if (breathTimer) return;
+    breathStep = 0; showPrompt(prompts[breathStep++]);
+    breathTimer = setInterval(()=>{
+      if (breathStep >= prompts.length) breathStep = 1; // loop inhale/hold/exhale
+      showPrompt(prompts[breathStep++]);
+    }, 15000); // 15s per step ~ 1 minute full cycle
+  });
+  document.getElementById('stopBreath').addEventListener('click', function(){ clearInterval(breathTimer); breathTimer = null; showPrompt(''); });
+
+  // rely on global chat/call modal when available; do not inject local modals
+  // Call modal handling for this page
+  document.addEventListener('click', function(e){
+    const callLink = e.target.closest && e.target.closest('a.call');
+    const closeButton = e.target.closest && e.target.closest('.modal-close');
+    const overlay = e.target.closest && e.target.closest('.modal');
+    if (callLink) { e.preventDefault(); document.getElementById('callModalLocal').style.display = 'block'; }
+    if (closeButton) { e.preventDefault(); closeButton.closest('.modal').style.display = 'none'; }
+    if (overlay && e.target === overlay) overlay.style.display = 'none';
+  });
+  document.getElementById('audioCall').addEventListener('click', function(){ alert('Starting audio call (demo).'); document.getElementById('callModalLocal').style.display='none'; });
+  document.getElementById('videoCall').addEventListener('click', function(){ alert('Starting video call (demo).'); document.getElementById('callModalLocal').style.display='none'; });
+</script>

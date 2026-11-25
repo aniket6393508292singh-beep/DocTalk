@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Specialist Doctors - DockTalk</title>
+    <link rel="stylesheet" href="cardio.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="chat.css">
+    <link rel="stylesheet" href="call.css">
+</head>
+<body class="cardio-page">
+    <div class="container">
+        <header class="page-header">
+            <button class="back-btn" type="button" onclick="history.back()">← Back</button>
+            <h1 id="categoryTitle">Featured Specialists</h1>
+            <p id="categorySubtitle">Registered specialists available for consultation.</p>
+        </header>
+        <section id="categoryCards" class="cards-grid">
+            <p id="categoryLoading">Loading specialists...</p>
+        </section>
+    </div>
+
+    <div id="appointmentModal" class="modal" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Book Appointment</h2>
+                <button class="modal-close" type="button" data-close-booking aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body">
+                <form id="appointmentForm">
+                    <label>Patient Name<br><input type="text" name="name" required></label>
+                    <label>Contact Phone<br><input type="tel" name="contactPhone" autocomplete="tel" required></label>
+                    <label>Doctor<br><input id="appointmentDoctor" type="text" name="doctor" readonly></label>
+                    <label>Preferred Date<br><input id="appointmentDate" type="date" name="date" required></label>
+                    <label>Preferred Time<br><input type="time" name="time" required></label>
+                    <label>Consultation Mode<br>
+                        <select name="mode">
+                            <option value="Video / Audio">Video / Audio</option>
+                            <option value="In-clinic">In-clinic</option>
+                        </select>
+                    </label>
+                    <div class="modal-actions">
+                        <button type="submit" class="btn primary">Confirm Booking</button>
+                        <button type="button" class="btn secondary" data-close-booking>Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="api.js"></script>
+    <script src="call.js"></script>
+    <script src="chat-modal.js"></script>
+    <script src="cart.js"></script>
+    <script src="booking.js"></script>
+    <script>
+        const specialty = new URL(location.href).searchParams.get('specialty') || 'Specialist';
+        const title = document.getElementById('categoryTitle');
+        const subtitle = document.getElementById('categorySubtitle');
+        const grid = document.getElementById('categoryCards');
+
+        title.textContent = 'Featured ' + specialty + ' Specialists';
+        subtitle.textContent = 'Registered ' + specialty.toLowerCase() + ' specialists available for consultation.';
+
+        function displayName(name) {
+            const value = String(name || '').trim();
+            return /^dr\.?\s/i.test(value) ? value : 'Dr. ' + value;
+        }
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function createCard(doctor) {
+            const name = displayName(doctor.name);
+            const initials = name.replace(/^Dr\.?\s*/i, '').split(/\s+/).slice(0, 2)
+                .map((part) => part[0]).join('').toUpperCase();
+            const modes = Array.isArray(doctor.consultationModes) && doctor.consultationModes.length
+                ? doctor.consultationModes
+                : ['Video consultation'];
+
+            const card = document.createElement('article');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="avatar">${escapeHtml(initials)}</div>
+                <div class="card-body">
+                    <h3>${escapeHtml(name)}</h3>
+                    <div class="meta">${escapeHtml(doctor.degree || 'Registered Medical Professional')}</div>
+                    <div class="experience">${doctor.experience_years ? doctor.experience_years + ' years experience — ' : ''}${escapeHtml(doctor.bio || 'Registered ' + specialty + ' specialist.')}</div>
+                    <ul class="specialties">
+                        ${modes.map((mode) => `<li>${escapeHtml(String(mode).replace(/-/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase()))}</li>`).join('')}
+                    </ul>
+                    <div class="card-footer">
+                        <div class="location">${escapeHtml(doctor.location || 'Location not provided')}</div>
+                        <div>
+                            <button type="button" class="btn">Book Appointment</button>
+                            <a class="chat-btn" href="chat.html?doctor=${encodeURIComponent(name)}">Chat</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        async function loadCategory() {
+            try {
+                const doctors = await window.DockTalkAPI.getDoctors();
+                const filtered = doctors.filter((doctor) =>
+                    String(doctor.specialty || '').trim().toLowerCase() === specialty.trim().toLowerCase()
+                );
+
+                grid.innerHTML = '';
+                if (!filtered.length) {
+                    grid.innerHTML = '<p class="empty-state">No registered doctors are available in this specialty yet.</p>';
+                    return;
+                }
+                filtered.forEach((doctor) => grid.appendChild(createCard(doctor)));
+            } catch (error) {
+                grid.innerHTML = '<p class="empty-state">Unable to load specialists.</p>';
+            }
+        }
+
+        loadCategory();
+    </script>
+</body>
+</html>

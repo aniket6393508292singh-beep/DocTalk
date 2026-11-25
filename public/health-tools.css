@@ -1,0 +1,490 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f8fafc;
+    color: #111827;
+}
+
+.tools-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 46px 24px;
+}
+
+.tools-header {
+    text-align: center;
+    margin-bottom: 36px;
+}
+
+.tools-header h1 {
+    margin-bottom: 12px;
+    font-size: 34px;
+}
+
+.tools-header p {
+    margin: 0 auto 18px;
+    max-width: 620px;
+    color: #475569;
+    line-height: 1.7;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 12px;
+    background: white;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    text-decoration: none;
+}
+
+.tool-cards {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.tool-card {
+    background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
+    border-radius: 28px;
+    padding: 32px;
+    box-shadow: 0 28px 80px rgba(15, 23, 42, 0.12);
+    border: 2px solid #c7d2fe;
+}
+
+.tool-card h2 {
+    margin: 0 0 10px;
+    font-size: clamp(1.4rem, 1.6vw, 1.6rem);
+    letter-spacing: -0.02em;
+    color: #0f172a;
+}
+
+.tool-card p {
+    margin: 0 0 18px;
+    max-width: 720px;
+    color: #475569;
+    line-height: 1.7;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 24px;
+    border-radius: 18px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+}
+
+.btn.primary {
+    background: linear-gradient(90deg, #2563eb, #4f46e5);
+    color: white;
+}
+
+.tool-card h2 {
+    color: #0f172a;
+}
+
+.tool-card .btn.primary {
+    box-shadow: 0 18px 40px rgba(37, 99, 235, 0.12);
+}
+
+.tool-card .btn.primary:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(90deg, #1d4ed8, #4338ca);
+    box-shadow: 0 12px 36px rgba(30, 64, 175, 0.14);
+}
+
+.btn.secondary {
+    background: linear-gradient(90deg, #2563eb, #4f46e5);
+    color: white;
+}
+
+/* small widgets and actions used on tool pages */
+.tool-actions {
+    margin-top: 12px;
+}
+
+.tool-actions .btn {
+    padding: 10px 14px;
+    border-radius: 10px;
+}
+
+.medicine-grid {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    margin-top: 18px;
+}
+
+/* On larger screens use a 4-column centered layout for medicines */
+@media (min-width: 1024px) {
+    .medicine-grid {
+        grid-template-columns: repeat(4, minmax(180px, 1fr));
+        max-width: 1100px;
+        margin: 18px auto 0;
+        gap: 20px;
+    }
+}
+
+.medicine-card {
+    display: block;
+    position: relative;
+    border: 1px solid #d1d5db;
+    border-radius: 24px;
+    padding: 20px;
+    background: white;
+    cursor: pointer;
+    transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.medicine-card:hover {
+    transform: translateY(-2px);
+    border-color: #93c5fd;
+    box-shadow: 0 14px 32px rgba(37, 99, 235, 0.08);
+}
+
+.medicine-card input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.medicine-card input:focus-visible + .medicine-card-body,
+.medicine-card input:focus + .medicine-card-body {
+    outline: none;
+    box-shadow: none;
+}
+
+.medicine-card-body {
+    display: grid;
+    gap: 8px;
+}
+
+.medicine-card strong {
+    font-size: 1rem;
+    color: #0f172a;
+}
+
+.medicine-card span,
+.medicine-card small {
+    color: #475569;
+    line-height: 1.6;
+}
+
+.medicine-card input:checked + .medicine-card-body {
+    border-radius: 24px;
+    background: rgba(37, 99, 235, 0.06);
+    box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.24);
+}
+
+/* form controls & small widgets (match symptom-checker) */
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 16px;
+    padding: 14px 16px;
+    font-size: 1rem;
+    color: #111827;
+    background: #f8fafc;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.tool-result {
+    margin-top: 26px;
+    padding: 26px 26px 28px;
+    border-radius: 24px;
+    background: white;
+    box-shadow: 0 24px 44px rgba(15, 23, 42, 0.08);
+}
+
+.pharmacy-layout {
+        display: grid;
+        grid-template-columns: 1fr; /* single column so main content spans full width */
+        gap: 24px;
+        align-items: start;
+}
+
+/* If you later re-introduce a sidebar, uncomment or add a class to enable two-column layout:
+@media (min-width: 1100px) {
+    .pharmacy-layout.has-sidebar {
+        grid-template-columns: minmax(0, 1fr) 320px;
+    }
+}
+*/
+
+.pharmacy-main {
+    min-width: 0;
+}
+
+.cart-sidebar {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    padding: 18px;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+    position: sticky;
+    top: 20px;
+}
+
+.cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.cart-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #111827;
+}
+
+.cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 420px;
+    overflow-y: auto;
+    margin-bottom: 12px;
+}
+
+.cart-item {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 8px;
+    align-items: center;
+    padding: 10px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #f9fafb;
+}
+
+.cart-item-meta {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+.cart-item-price {
+    font-weight: 700;
+    color: #1d4ed8;
+}
+
+.cart-remove {
+    border: none;
+    background: transparent;
+    color: #dc2626;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.empty-state {
+    color: #6b7280;
+    font-size: 14px;
+    padding: 10px 0;
+}
+
+.cart-footer {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 12px;
+}
+
+.cart-total {
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #111827;
+}
+
+.testkit-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.testkit-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 12px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.testkit-card span {
+    color: #1d4ed8;
+    font-weight: 700;
+}
+
+@media (max-width: 980px) {
+    .pharmacy-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .cart-sidebar {
+        position: relative;
+        top: auto;
+    }
+}
+
+@media (max-width: 640px) {
+    .testkit-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.chat-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(2, 6, 23, 0.6);
+    z-index: 1200;
+}
+
+.chat-modal.active {
+    display: flex;
+}
+
+.chat-modal-content {
+    width: 100%;
+    max-width: 900px;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 80vh;
+}
+
+.chat-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e6eef8;
+}
+
+.chat-modal-iframe {
+    border: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(2, 6, 23, 0.4);
+    z-index: 1100;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    border-radius: 12px;
+    padding: 18px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+@media (max-width: 640px) {
+    .tools-container {
+        padding: 24px 16px;
+    }
+
+    .tool-card {
+        padding: 22px;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+/* Keep tool controls and panels contained at narrow widths */
+.tools-container,
+.tool-card,
+.tool-form,
+.tool-result,
+.modal-content,
+.chat-modal-content {
+    min-width: 0;
+}
+
+.tool-actions,
+.modal-actions,
+.pharmacy-layout,
+.cart-sidebar {
+    max-width: 100%;
+}
+
+@media (max-width: 640px) {
+    .tool-actions,
+    .modal-actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .tool-actions .btn,
+    .modal-actions .btn,
+    .modal-actions button,
+    .modal-actions a {
+        width: 100%;
+        max-width: 100%;
+        justify-content: center;
+    }
+
+    .modal-content,
+    .chat-modal-content {
+        max-height: calc(100vh - 20px);
+        overflow-y: auto;
+    }
+}

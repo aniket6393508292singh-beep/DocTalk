@@ -1,0 +1,31 @@
+{
+  "name": "doctalk",
+  "version": "1.0.0",
+  "description": "DockTalk telemedicine platform backend and MongoDB database",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "db:start": "docker compose up -d mongo",
+    "db:stop": "docker compose down",
+    "start:local": "powershell -ExecutionPolicy Bypass -File ./start-doctalk.ps1"
+  },
+  "keywords": [
+    "doctalk",
+    "telemedicine",
+    "healthcare",
+    "express",
+    "mongodb",
+    "mongoose"
+  ],
+  "author": "DockTalk Team",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^9.11.1",
+    "dotenv": "^16.4.7"
+  }
+}

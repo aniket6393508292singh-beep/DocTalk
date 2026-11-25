@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>First Aid</title>
+  <link rel="stylesheet" href="health-tools.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="tools-container">
+    <header class="tools-header">
+      <button type="button" class="btn secondary back-link" onclick="history.back()">← Go Back</button>
+      <h1>First Aid Essentials</h1>
+      <p>Quick reference: basic medicines and step-by-step first aid instructions for common situations.</p>
+    </header>
+
+    <section class="tool-card">
+      <h2>Essential First Aid Medicines & Supplies</h2>
+      <p>These items are commonly used for immediate at-home first aid. Follow instructions and seek medical care for serious injuries.</p>
+
+      <div class="medicine-grid" style="margin-top:18px;">
+
+        <div class="medicine-card">
+          <div class="medicine-card-body">
+            <strong>Paracetamol (Acetaminophen)</strong>
+            <span>Use: Pain relief, fever reducer</span>
+            <small>Dosage: Adults 500–1000 mg every 4–6 hours (max 3 g/day). Check pediatric dosing for children.</small>
+            <div style="margin-top:8px; display:flex; gap:8px;">
+              <button class="btn secondary add-to-cart" data-name="Paracetamol 500mg (Pack)" data-price="60">Add to cart</button>
+              <button class="btn secondary" data-info="paracetamol">Instructions</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="medicine-card">
+          <div class="medicine-card-body">
+            <strong>Ibuprofen</strong>
+            <span>Use: Anti-inflammatory, pain relief</span>
+            <small>Dosage: Adults 200–400 mg every 4–6 hours (max 1200 mg/day OTC). Avoid if gastric ulcer or kidney disease.</small>
+            <div style="margin-top:8px; display:flex; gap:8px;">
+              <button class="btn secondary add-to-cart" data-name="Ibuprofen 200mg (Pack)" data-price="80">Add to cart</button>
+              <button class="btn secondary" data-info="ibuprofen">Instructions</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="medicine-card">
+          <div class="medicine-card-body">
+            <strong>Antiseptic Spray / Solution</strong>
+            <span>Use: Clean wounds, prevent infection</span>
+            <small>Apply to cleaned wound area; avoid deep puncture wounds—seek professional care.</small>
+            <div style="margin-top:8px; display:flex; gap:8px;">
+              <button class="btn secondary add-to-cart" data-name="Antiseptic Spray" data-price="120">Add to cart</button>
+              <button class="btn secondary" data-info="antiseptic">Instructions</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="medicine-card">
+          <div class="medicine-card-body">
+            <strong>Adhesive Bandages & Gauze</strong>
+            <span>Use: Cover and protect cuts or abrasions</span>
+            <small>Choose appropriate size; change dressings daily or if soiled.</small>
+            <div style="margin-top:8px; display:flex; gap:8px;">
+              <button class="btn secondary add-to-cart" data-name="First Aid Bandage Pack" data-price="150">Add to cart</button>
+              <button class="btn secondary" data-info="bandage">Instructions</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="medicine-card">
+          <div class="medicine-card-body">
+            <strong>Oral Rehydration Salts (ORS)</strong>
+            <span>Use: Rehydrate in case of diarrhea/vomiting</span>
+            <small>Mix with clean water as instructed on the packet. Give small sips frequently.</small>
+            <div style="margin-top:8px; display:flex; gap:8px;">
+              <button class="btn secondary add-to-cart" data-name="ORS Packet" data-price="40">Add to cart</button>
+              <button class="btn secondary" data-info="ors">Instructions</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="medicine-card">
+          <div class="medicine-card-body">
+            <strong>Antihistamine (Cetirizine)</strong>
+            <span>Use: Allergic reactions, hives</span>
+            <small>Dosage: Adults 10 mg once daily. Seek emergency care for breathing difficulty.</small>
+            <div style="margin-top:8px; display:flex; gap:8px;">
+              <button class="btn secondary add-to-cart" data-name="Cetirizine 10mg (Pack)" data-price="90">Add to cart</button>
+              <button class="btn secondary" data-info="antihistamine">Instructions</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="medicine-card">
+          <div class="medicine-card-body">
+            <strong>Burn Gel / Hydrogel</strong>
+            <span>Use: Cool and soothe minor burns</span>
+            <small>Apply gently; for severe burns seek emergency care.</small>
+            <div style="margin-top:8px; display:flex; gap:8px;">
+              <button class="btn secondary add-to-cart" data-name="Burn Gel" data-price="100">Add to cart</button>
+              <button class="btn secondary" data-info="burn">Instructions</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="tool-card" style="margin-top:18px;">
+      <h2>First Aid Instructions — Step by Step</h2>
+      <p>Tap any instruction button above to view step-by-step guidance for that topic.</p>
+
+      <div id="firstAidGuide" class="tool-result" style="display:block; margin-top:12px;">
+        <h3 id="guideTitle">Select a topic</h3>
+        <div id="guideImage" style="margin-top:12px;"></div>
+        <ol id="guideSteps" style="padding-left:20px; color:#475569; line-height:1.8; margin-top:12px;"></ol>
+        <p id="guideNote" style="margin-top:12px; color:#6b7280;"></p>
+      </div>
+    </section>
+  </div>
+
+  <script src="api.js"></script>
+  <script src="cart.js"></script>
+  <script>
+    // Wire Add to cart buttons
+    document.querySelectorAll('.add-to-cart').forEach(btn=>{
+      btn.addEventListener('click', function(){
+        const name = this.getAttribute('data-name');
+        const price = Number(this.getAttribute('data-price')) || 0;
+        if (window.addToCart) window.addToCart(name, price, 'First Aid');
+        alert(name + ' added to cart.');
+      });
+    });
+
+    const woundIllustration = 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80';
+    const burnIllustration = 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=1200&q=80';
+
+    const topics = {
+      paracetamol: {
+        title: 'Paracetamol — How to use',
+        image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1200&q=80',
+        steps: [
+          'Confirm age and weight to calculate proper dose (check pediatric guidelines).',
+          'Give recommended adult dose 500–1000 mg every 4–6 hours as needed for pain or fever.',
+          'Do not exceed 3 g (3000 mg) per 24 hours unless directed by a physician.',
+          'Avoid taking other medications containing paracetamol simultaneously.'
+        ],
+        note: 'Seek medical advice if fever persists >48 hours or if severe symptoms occur.'
+      },
+      ibuprofen: {
+        title: 'Ibuprofen — How to use',
+        image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1200&q=80',
+        steps: [
+          'Take with food or milk to reduce stomach upset.',
+          'Typical adult dose 200–400 mg every 4–6 hours (do not exceed OTC limits).',
+          'Avoid if you have active peptic ulcer disease or severe kidney disease.'
+        ],
+        note: 'Stop and seek care for severe abdominal pain or signs of allergic reaction.'
+      },
+      antiseptic: {
+        title: 'Cleaning wounds — Antiseptic use',
+        image: woundIllustration,
+        steps: [
+          'Wash hands thoroughly.',
+          'Rinse wound with clean water to remove dirt.',
+          'Apply antiseptic spray or solution to the area and pat dry.',
+          'Cover with an appropriate dressing; change if wet or soiled.'
+        ],
+        note: 'Seek medical care for deep, large, or heavily contaminated wounds.'
+      },
+      bandage: {
+        title: 'Applying bandages and dressings',
+        image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1200&q=80',
+        steps: [
+          'Clean the wound and apply antiseptic.',
+          'Place sterile gauze over the wound.',
+          'Secure with adhesive bandage or wrap, ensuring circulation is not cut off.',
+          'Check fingers/toes for normal color and warmth after bandaging.'
+        ],
+        note: 'If bleeding does not stop after 10–15 minutes of pressure, seek emergency care.'
+      },
+      ors: {
+        title: 'Oral Rehydration — ORS',
+        image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=1200&q=80',
+        steps: [
+          'Dissolve ORS packet in the amount of clean water specified on the packet.',
+          'Give small, frequent sips to the patient; for infants use a spoon or dropper.',
+          'Continue feeding breastmilk or normal diet for children alongside ORS.'
+        ],
+        note: 'Seek care for signs of severe dehydration (lethargy, very dry mouth, no urine).' 
+      },
+      antihistamine: {
+        title: 'Antihistamine — Allergic reactions',
+        image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1200&q=80',
+        steps: [
+          'For mild allergic symptoms, give the recommended antihistamine dose (e.g., cetirizine 10 mg for adults).',
+          'Monitor for improvement; do not give to someone who is drowsy or has breathing difficulty without medical advice.'
+        ],
+        note: 'For anaphylaxis (breathing difficulty, throat swelling) call emergency services immediately.'
+      },
+      burn: {
+        title: 'Minor Burns — Cooling & care',
+        image: burnIllustration,
+        steps: [
+          'Cool the burn with running cool (not icy) water for 10–20 minutes.',
+          'Remove tight items and jewelry from the affected area before swelling begins.',
+          'Cover with a clean, non-stick dressing. Do not use ice or butter/oils.'
+        ],
+        note: 'For large or deep burns, or burns to face/hands/genitals, seek emergency care.'
+      }
+    };
+
+    document.addEventListener('click', function(e){
+      const infoBtn = e.target.closest && e.target.closest('[data-info]');
+      if (infoBtn) {
+        const key = infoBtn.getAttribute('data-info');
+        showTopic(key);
+      }
+    });
+
+    // Helper to render a topic by key (used for clicks and deep-links)
+    function showTopic(key) {
+      const t = topics[key];
+      if (!t) return;
+      document.getElementById('guideTitle').textContent = t.title;
+      document.getElementById('guideImage').innerHTML = '<div class="article-figure"><img src="'+t.image+'" alt="'+t.title+'"></div>';
+      const stepsOl = document.getElementById('guideSteps'); stepsOl.innerHTML = '';
+      t.steps.forEach(function(s){ const li = document.createElement('li'); li.textContent = s; stepsOl.appendChild(li); });
+      document.getElementById('guideNote').textContent = t.note;
+      // update URL hash for shareability
+      try { history.replaceState && history.replaceState(null, '', '#'+encodeURIComponent(key)); } catch (e) {}
+      // scroll into view on small screens
+      window.scrollTo({ top: document.getElementById('firstAidGuide').offsetTop - 80, behavior: 'smooth' });
+    }
+
+    // On load, handle deep-links like first-aid.html#paracetamol or ?topic=ibuprofen
+    (function handleInitialTopic(){
+      const params = new URLSearchParams(window.location.search);
+      const paramTopic = params.get('topic');
+      const hash = (window.location.hash || '').replace('#','');
+      const key = paramTopic || hash;
+      if (key && topics[key]) {
+        // small timeout to allow layout to settle
+        setTimeout(()=> showTopic(key), 120);
+      }
+    })();
+
+  </script>
+</body>
+</html>
